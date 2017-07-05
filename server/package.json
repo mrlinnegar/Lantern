@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon lib/index.js --exec babel-node",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon lib/index.js --exec babel-node",
+    "client": "node start-client.js",
     "build": "babel lib -d dist",
     "serve": "node dist/index.js",
     "test": "mocha --compilers js:babel-register"

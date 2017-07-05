@@ -6,6 +6,6 @@ const app = express();
 
 app.use('/light', light);
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log('lantern listening on port 3001');
 });
