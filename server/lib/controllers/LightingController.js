@@ -14,12 +14,19 @@ export default class LightingController {
 
   handleMessage(topic, message) {
 
-    const id =  message.toString();
+    const data =  message.toString().split("|");
+
+    const id = data[0];
+    const color = data[1];
+
 
     if(!this._lightMediators.has(id)){
       this.registerLight(id);
     } else {
       this._lightMediators.get(id)._light.lastUpdated = new Date();
+      if(!color){
+        this._lightMediators.get(id).off();
+      }
     }
 
   }

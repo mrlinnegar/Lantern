@@ -14,18 +14,9 @@ export default class Comms {
     });
 
     this._client.on('message', (topic, message)=>{
+      console.log(topic, message.toString(), new Date());
       callback(topic, message);
     });
-  }
-
-  handleMessage(topic, message) {
-    const id =  message.toString();
-
-    if(!this._lightMediators.has(id)){
-      this.registerLight(id);
-    } else {
-      this._lightMediators.get(id)._light.lastUpdated = new Date();
-    }
   }
 
   publish(address, color){
