@@ -7,24 +7,22 @@ class App extends Component {
   state = {lights:[]}
 
   componentDidMount() {
-    fetch('/lights/all')
+    fetch('/api/lights')
       .then(res => res.json())
-      .then(lights => this.setState({ lights }));
+      .then(lights => this.setState({ lights }))
   }
 
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Lights</h2>
+          <h2>Something</h2>
         </div>
         <div className="App-intro">
           {this.state.lights.map(light =>
             <Light
               key={light.id}
               id={light.id}
-              color={light.color}
-              status={light.status}
             />
           )}
         </div>

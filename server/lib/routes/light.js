@@ -61,7 +61,9 @@ router.get('/:light', (req, res)=> {
 
 });
 
-
+router.post('/:light', (req, res)=> {
+  
+});
 
 router.post('/:light/on', (req, res)=> {
 
