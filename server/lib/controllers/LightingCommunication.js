@@ -7,7 +7,7 @@ export default class Comms {
   }
 
   init(callback){
-    this._client = mqtt.connect("mqtt://192.168.1.22");
+    this._client = mqtt.connect("mqtt://localhost");
 
     this._client.on('connect', ()=>{
       this._client.subscribe('/connect')

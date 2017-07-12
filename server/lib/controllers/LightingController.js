@@ -49,85 +49,6 @@ export default class LightingController {
     mediator.off();
   }
 
-  onById(id){
-    return new Promise((resolve, reject)=>{
-      let mediator = this._lightMediators.get(id);
-
-      if(mediator){
-        mediator.on();
-        resolve(mediator.getLight());
-      } else {
-        reject();
-      }
-    })
-  }
-
-  offById(id){
-    return new Promise((resolve, reject)=>{
-      let mediator = this._lightMediators.get(id);
-
-      if(mediator){
-        mediator.off();
-        resolve(mediator.getLight());
-      } else {
-        reject();
-      }
-    })
-  }
-
-  allColor(color){
-    return new Promise((resolve, reject)=>{
-      this._lightMediators.forEach((mediator)=> {
-        mediator.setColor(color);
-      });
-
-      this.getLights()
-        .then((lights)=>{
-          resolve(lights);
-        });
-    });
-  }
-
-  colorById(id, color){
-    return new Promise((resolve, reject)=>{
-      let mediator = this._lightMediators.get(id);
-
-      if(mediator){
-        mediator.setColor(color);
-        resolve(mediator.getLight());
-      } else {
-        reject();
-      }
-
-    })
-  }
-
-  allLightsOff(){
-    return new Promise((resolve, reject)=>{
-      this._lightMediators.forEach((mediator)=>{
-        mediator.off();
-      });
-
-      this.getLights()
-        .then((lights)=>{
-          resolve(lights);
-        });
-    });
-  }
-
-  allLightsOn(){
-    return new Promise((resolve, reject)=>{
-      this._lightMediators.forEach((mediator)=>{
-        mediator.on();
-      });
-
-      this.getLights()
-        .then((lights)=>{
-          resolve(lights);
-        });
-    });
-  }
-
   getLights(){
     return new Promise((resolve, reject)=> {
       let lights = [];
@@ -142,7 +63,7 @@ export default class LightingController {
     return new Promise((resolve, reject)=>{
       let mediator = this._lightMediators.get(id);
       if(mediator){
-        resolve(mediator.getLight());
+        resolve(mediator);
       } else {
         reject();
       }

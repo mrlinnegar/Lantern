@@ -2,11 +2,21 @@ import React, { Component } from 'react';
 import './App.css';
 import Light from './Light';
 
-class App extends Component {
+const io = require('socket.io-client')
+const socket = io()
 
-  state = {lights:[]}
+class App extends Component {
+  constructor(props){
+    super(props)
+    socket.on('connect', ()=>{
+      console.log('connecting');
+    })
+  }
+  state = {lights:[]};
 
   componentDidMount() {
+
+
     fetch('/api/lights')
       .then(res => res.json())
       .then(lights => this.setState({ lights }))

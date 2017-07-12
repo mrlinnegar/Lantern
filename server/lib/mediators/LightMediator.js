@@ -20,15 +20,25 @@ export default class LightMediator extends Observable {
     console.log('light off', this._address);
   }
 
+  setStatus(status = 0){
+    this._light.status = status;
+  }
+
   setColor(color) {
     this._light.color = color;
-    this._light.status = 1;
-    this.emit('color', this);
     console.log('light color', this._address);
   }
 
   getLight(){
     return this._light;
+  }
+
+  update(){
+    if(this._light.status){
+      this.on();
+    } else {
+      this.off();
+    }
   }
 
   isOn(){

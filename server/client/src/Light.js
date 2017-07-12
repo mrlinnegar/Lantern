@@ -5,8 +5,6 @@ import './Light.css';
 class Light extends Component {
 
   state = {
-    color:'000000',
-    status:'0',
     displayColorPicker: false
   };
 
@@ -22,21 +20,32 @@ class Light extends Component {
   }
 
   _handleClick(e) {
-    console.log(this.props.id);
+    const toggle = (this.state.status===0)?1:0;
+    this.setState({ status : toggle }, this.updateLight);
+  }
 
-    const url = (this.state.status)? "off":"on";
-    fetch('/api/lights/'+this.props.id+'/'+url,
-      {method:'POST'}
-    )
+  updateLight(){
+    fetch('/api/lights/'+this.props.id,
+      {
+        method:'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+                "status": this.state.status,
+                "color": this.state.color
+              })
+    })
     .then(res => res.json())
     .then(data => this.setState( data ))
   }
-
   handleChangeComplete = (color) => {
-    this.setState({  color: color.hex.replace('#','') });
+    this.setState({
+      displayColorPicker: !this.state.displayColorPicker,
+      color: color.hex.replace('#','')
+    }, this.updateLight);
   };
 
-  handleClick = () => {
+  toggleColorPicker = (e) => {
+    e.stopPropagation();
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
 
@@ -47,26 +56,25 @@ class Light extends Component {
 
   render() {
 
-    const style = {
-      color: '#ffffff',
-      backgroundColor: "#" + this.state.color
-    };
-
     const styles = reactCSS({
           'default': {
             color: {
-              width: '36px',
-              height: '14px',
-              borderRadius: '2px',
+              width: '50px',
+              height: '50px',
+              borderRadius: '5px',
               background: `#${ this.state.color}`,
+              opacity: `${this.state.status}`
             },
             swatch: {
               padding: '5px',
-              background: '#fff',
-              borderRadius: '1px',
+              background: '#eeeeee',
+              borderRadius: '5px',
               boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
               display: 'inline-block',
               cursor: 'pointer',
+              borderColor: `#${ this.state.color}`,
+              borderWidth: '1px',
+              borderStyle: 'solid'
             },
             popover: {
               position: 'absolute',
@@ -79,17 +87,21 @@ class Light extends Component {
               bottom: '0px',
               left: '0px',
             },
+
           },
         });
 
     return (
       <div className="Light">
 
-        <button onClick={this._handleClick}>{this.state.status}</button>
 
-        <div style={ styles.swatch } onClick={ this.handleClick }>
+
+        <div style={ styles.swatch } onClick={ this._handleClick }>
           <div style={ styles.color } />
+
+          <button onClick={this.toggleColorPicker}>Color</button>
         </div>
+
         { this.state.displayColorPicker ? <div style={ styles.popover }>
           <div style={ styles.cover } onClick={ this.handleClose }/>
           <GithubPicker
