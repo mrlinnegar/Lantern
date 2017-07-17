@@ -1,6 +1,6 @@
 import React from 'react'
 import Light from './Light'
-
+import './LightList.css'
 
 
 class LightList extends React.Component {
@@ -16,8 +16,10 @@ class LightList extends React.Component {
             key={light.id}
             {...light}
             toggleClick={ ()=> this.props.toggleLightClick(light.id)}
-            colorClick={ ()=> this.props.updateLightColor(light.id, '0000FF')}
+            colorClick={ (color)=> this.props.updateLightColor(light.id, color.hex.replace('#','') )}
             removeClick={ ()=> this.props.removeLightClick(light.id)}
+            closePalette = { ()=> this.props.closePalette(light.id)}
+            openPalette = { ()=> this.props.openPalette(light.id)}
           />
         )}
 

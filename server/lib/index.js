@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
   lighting.getLights()
     .then((lights)=> {
-      socket.emit('action', {type:'GET_LIGHT_DATA_RECIEVED', data: lights});
+      socket.emit('action', {type:'SERVER_ALL_LIGHTS', data: lights});
     })
 
   socket.on('action', (action)=>{

@@ -1,5 +1,63 @@
 .Light {
-
+  position:relative;
   display:inline-block;
   margin: 10px;
+  border-radius: 4px;
+  padding:10px;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.LightControls {
+  display: flex;
+}
+
+
+.Switch {
+  position: relative;
+  width: 60px;
+  height: 36px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.2);
+  -webkit-transition: .4s;
+  transition: .4s;
+  border:1px solid rgba(0,0,0,0.1);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.Switch.on .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.ColorSelect {
+  color: white;
+  font-size: 14pt;
+  text-decoration: underline;
+  cursor: pointer;
+  display:inline-block;
+  line-height: 36px;
+  border-radius: 0 3px 3px 0;
+  padding: 0 8px;
 }

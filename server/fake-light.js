@@ -1,9 +1,9 @@
 const mqtt = require('mqtt');
 
 class Light {
-  constructor() {
+  constructor(id = '12345') {
     this.connection = mqtt.connect('mqtt://192.168.1.22');
-    this.ID = '12345';
+    this.ID = id;
     this.color = '';
 
     this.connection.on('connect', () => {
@@ -14,6 +14,8 @@ class Light {
         this.color = message.toString();
       });
     });
+
+    this.enable();
   }
 
   enable() {
@@ -32,5 +34,6 @@ class Light {
 
 }
 
-const light = new Light();
-light.enable();
+for(let i = 0; i < 100; i++) {
+  const light = new Light(Math.random());
+}

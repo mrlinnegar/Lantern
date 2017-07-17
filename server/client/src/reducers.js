@@ -3,7 +3,10 @@ import { SERVER_TOGGLE_LIGHT,
          SERVER_REMOVE_LIGHT,
          SERVER_UPDATE_LIGHT,
          SERVER_ADD_LIGHT,
-         GET_LIGHT_DATA_RECIEVED} from './actions'
+         SERVER_ALL_LIGHTS,
+         LIGHT_PALETTE_HIDE,
+         LIGHT_PALETTE_SHOW
+       } from './actions'
 
 import { combineReducers } from 'redux'
 
@@ -24,7 +27,8 @@ function lights( state = [], action ){
       return state.map((light) => {
         if(light.id === action.id) {
           return Object.assign({}, light, {
-            color: action.color
+            color: action.color,
+            palette: false
           })
         }
         return light
@@ -39,17 +43,37 @@ function lights( state = [], action ){
       })
 
     case SERVER_ADD_LIGHT:
+      const light = Object.assign({}, action.light, { palette: false});
       return [
         ...state,
-        action.light
+        light
       ]
 
     case SERVER_REMOVE_LIGHT:
       return state.filter(light => light.id !== action.id);
 
-    case GET_LIGHT_DATA_RECIEVED:
+    case SERVER_ALL_LIGHTS:
       return action.data
 
+    case LIGHT_PALETTE_HIDE:
+      return state.map((light) => {
+        if(light.id === action.id) {
+          return Object.assign({}, light, {
+            palette : false
+          })
+        }
+        return light;
+      })
+
+    case LIGHT_PALETTE_SHOW:
+      return state.map((light) => {
+        if(light.id === action.id) {
+          return Object.assign({}, light, {
+            palette : true
+          })
+        }
+        return light;
+      })
     default:
       return state
   }
