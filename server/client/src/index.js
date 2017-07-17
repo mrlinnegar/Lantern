@@ -1,8 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import createSocketIoMiddleware from 'redux-socket.io';
 import './index.css';
 import App from './App';
-//import registerServiceWorker from './registerServiceWorker';
+import lightsApp from './reducers'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-//registerServiceWorker();
+
+import io from 'socket.io-client';
+let socket = io('http://localhost:3000');
+let socketIoMiddleware = createSocketIoMiddleware(socket, "SERVER_");
+
+let store = createStore(lightsApp, {}, applyMiddleware(socketIoMiddleware));
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);

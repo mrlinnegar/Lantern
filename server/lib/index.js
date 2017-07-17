@@ -27,10 +27,50 @@ const server = app.listen(3001, () => {
 const io = require('socket.io').listen(server);
 
 
-io.on('connection', (socket) => {
-  socket.emit('lights', lighting.getLights());
+lighting.addObserver('SERVER_ADD_LIGHT', (light)=> {
+  io.sockets.emit('action', { type: 'SERVER_ADD_LIGHT', light: light })
+})
 
-  socket.on('event', (data)=>{
-    console.log(data);
+lighting.addObserver('SERVER_REMOVE_LIGHT', (id)=> {
+  io.sockets.emit('action', { type: 'SERVER_REMOVE_LIGHT', id })
+})
+
+lighting.addObserver('SERVER_UPDATE_LIGHT', (light)=> {
+  io.sockets.emit('action', { type: 'SERVER_UPDATE_LIGHT', light })
+})
+
+io.on('connection', (socket) => {
+
+  lighting.getLights()
+    .then((lights)=> {
+      socket.emit('action', {type:'GET_LIGHT_DATA_RECIEVED', data: lights});
+    })
+
+  socket.on('action', (action)=>{
+    console.log(action);
+    switch (action.type) {
+      case 'SERVER_LIGHT_COLOR':
+        lighting.getLightById(action.id)
+          .then((mediator) =>{
+            mediator.update({color:action.color, status: 1})
+            socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: mediator.getLight()})
+          })
+          break;
+      case 'SERVER_TOGGLE_LIGHT':
+        lighting.getLightById(action.id)
+          .then((mediator)=> {
+            const newStatus = (mediator.getLight().status ? 0 : 1 );
+            mediator.update({status:newStatus});
+            socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: mediator.getLight()})
+          })
+          .catch((e)=>{
+            console.log("error", e)
+          })
+          break;
+      default:
+        break;
+    }
+
   });
+
 });
