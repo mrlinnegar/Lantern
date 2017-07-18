@@ -10,6 +10,8 @@ let lighting = new LightingController();
 
 const app = express();
 
+app.use(express.static('public'))
+
 app.use(bodyparser.json());
 
 app.use(function(req, res, next) {

@@ -4,9 +4,18 @@ const expect = require('chai').expect;
 import lightData from '../src/validators/validators.js';
 
 describe('Light Validation', () => {
+
+  it('should remove unwanted properties', ()=> {
+      const inputData = { 'otherobject': 12345 }
+      const outputData = lightData(inputData)
+      const expectedData = {}
+
+      expect(outputData).to.deep.equal(expectedData)
+  })
+
   describe('Status', ()=> {
 
-    it('is missing is valid', () => {
+    it('should allow no status to be passed', () => {
       const data = {};
 
       const test = function(){
@@ -16,9 +25,17 @@ describe('Light Validation', () => {
       expect(test).not.to.throw();
     });
 
-    it('should return true for valid status codes', ()=> {
-      expect(lightData({status:1})).to.be.true;
-      expect(lightData({status:0})).to.be.true;
+    it('should return input object for valid on status code', ()=> {
+      const testData = { status: 1};
+      const outputData = lightData(testData);
+
+      expect(outputData).to.deep.equal(testData);
+    })
+
+    it('should return input object for valid off status code', ()=> {
+      const testData = { status: 0 }
+      const outputData = lightData(testData);
+      expect(outputData).to.deep.equal(testData);
     })
 
     it('should throw an error for invalud status codes', ()=> {
@@ -43,21 +60,25 @@ describe('Light Validation', () => {
     })
 
     it('should return true when no color is passed', ()=>{
-      expect(lightData({})).to.be.true
+      const testData = {}
+      const outputData = lightData(testData);
+      expect(outputData).to.deep.equal(testData);
     })
 
     it('should return true when valid color is passed', ()=>{
       const testData = {
         color: 'FFFFFF'
       }
-      expect(lightData(testData)).to.be.true
+      const outputData = lightData(testData);
+      expect(outputData).to.deep.equal(testData);
     })
 
     it('should be case insensitive', ()=> {
       const testData = {
         color: 'ffffff'
       }
-      expect(lightData(testData)).to.be.true
+      const outputData = lightData(testData);
+      expect(outputData).to.deep.equal(testData)
     })
 
     it('should throw an error when incorrect color is passed', ()=> {

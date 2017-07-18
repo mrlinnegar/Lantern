@@ -8,8 +8,9 @@ export default class Light extends Observable {
     this._address = "/" + id;
   }
 
-  update(req = {}){
-    this._lightData = Object.assign(new Light(), this._lightData, req);
+  update(update = {}){
+
+    this._lightData = Object.assign(new LightData(), this._lightData, update);
 
     if(this._lightData.status){
       this.emit('LIGHT_ON', this);
@@ -28,6 +29,7 @@ export default class Light extends Observable {
 
 
   getData(){
+    console.log('get data', this._lightData);
     return this._lightData;
   }
 

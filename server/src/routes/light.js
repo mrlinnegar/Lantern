@@ -1,4 +1,6 @@
 import express from 'express';
+import lightData from '../validators/validators'
+
 function createRoutes(lighting) {
   let router = express.Router();
 
@@ -18,8 +20,14 @@ function createRoutes(lighting) {
   router.post('/:light', (req, res)=> {
     const light = lighting.getLightById(req.params.light)
     if(light){
-      light.update(req.body);
-      res.json(light.getData());
+      try {
+        const validatedInput = lightData(req.body)
+        light.update(validatedInput);
+        res.json(light.getData());
+      } catch (error) {
+        res.status(error.status).json(error);
+      }
+
     } else {
       res.status(404).send("no light found");
     }

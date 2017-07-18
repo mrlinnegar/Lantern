@@ -1,13 +1,21 @@
 export default function lightData(data){
-  if(data.status){
-    if(data.status !== 0 && data.status !== 1){
-      throw new Error("Status is set incorrectly")
+  let { status: s, color: c } = data;
+  let response = {}
+
+  if(typeof s !== "undefined"){
+    if(s !== 0 && s !== 1){
+      throw new Error({code: 400, message : "Status is set incorrectly"})
     }
+    response.status = s;
   }
-  if(data.color){
+
+  if(c){
     const pattern = new RegExp('[0-9A-Fa-f]{6}')
-    if(!pattern.test(data.color))
-      throw new Error("Color is not a valid format")
+    if(!pattern.test(c)) {
+      throw new Error({code: 400, message : "Color is not a valid format"})
+    }
+    response.color = c;
   }
-  return true
+
+  return response;
 }
