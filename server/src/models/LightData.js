@@ -1,4 +1,4 @@
-export default class Light {
+export default class LightData {
   constructor(id, status, color='FEFEFF'){
     this.id = id;
     this.status = status;

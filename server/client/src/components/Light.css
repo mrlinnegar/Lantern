@@ -52,9 +52,7 @@
 }
 
 .ColorSelect {
-  color: white;
   font-size: 14pt;
-  text-decoration: underline;
   cursor: pointer;
   display:inline-block;
   line-height: 36px;

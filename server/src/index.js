@@ -3,12 +3,12 @@ import express from 'express';
 import light from './routes/light';
 import bodyparser from 'body-parser';
 import LightingController from './controllers/LightingController';
+import lightData from './validators/validators'
 
-
+console.log(lightData({}));
 let lighting = new LightingController();
 
 const app = express();
-
 
 app.use(bodyparser.json());
 
@@ -41,32 +41,26 @@ lighting.addObserver('SERVER_UPDATE_LIGHT', (light)=> {
 
 io.on('connection', (socket) => {
 
-  lighting.getLights()
-    .then((lights)=> {
-      socket.emit('action', {type:'SERVER_ALL_LIGHTS', data: lights});
-    })
+  const lights = lighting.getLights()
+  socket.emit('action', {type:'SERVER_ALL_LIGHTS', data: lights});
 
   socket.on('action', (action)=>{
+    let light
     console.log(action);
     switch (action.type) {
       case 'SERVER_LIGHT_COLOR':
-        lighting.getLightById(action.id)
-          .then((mediator) =>{
-            mediator.update({color:action.color, status: 1})
-            socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: mediator.getLight()})
-          })
-          break;
+        light = lighting.getLightById(action.id)
+        light.update({color:action.color, status: 1})
+
+        socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: light.getData()})
+        break;
+
       case 'SERVER_TOGGLE_LIGHT':
-        lighting.getLightById(action.id)
-          .then((mediator)=> {
-            const newStatus = (mediator.getLight().status ? 0 : 1 );
-            mediator.update({status:newStatus});
-            socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: mediator.getLight()})
-          })
-          .catch((e)=>{
-            console.log("error", e)
-          })
-          break;
+        light = lighting.getLightById(action.id)
+        const newStatus = (light.isOn() ? 0 : 1 );
+        light.update({status:newStatus});
+        socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: light.getData()})
+        break;
       default:
         break;
     }

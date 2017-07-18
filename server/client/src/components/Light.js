@@ -1,8 +1,9 @@
 import React from 'react'
 import reactCSS from 'reactcss';
 import './Light.css'
-import logo from './pantone.svg';
 import { GithubPicker } from 'react-color';
+
+const tinycolor = require('tinycolor2');
 
 class Light extends React.Component {
 
@@ -12,10 +13,14 @@ class Light extends React.Component {
     if(this.props.status)
       classNames = classNames + " on";
 
+
     const styles = reactCSS({
           'default': {
             swatch: {
               backgroundColor: `#${ this.props.color}`,
+            },
+            selector: {
+              color: tinycolor(this.props.color).isDark()? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)'
             },
             popover: {
               position: 'absolute',
@@ -44,8 +49,8 @@ class Light extends React.Component {
           </div>
         </div>
         <div>
-          <div className="ColorSelect" onClick={this.props.openPalette}  >
-            <span>#{ this.props.color}</span>
+          <div className="ColorSelect" style={ styles.selector} onClick={this.props.openPalette}  >
+            <span>#{ this.props.color.toUpperCase()}</span>
           </div>
         </div>
         </div>

@@ -18,11 +18,8 @@ export default class Comms {
     });
   }
 
-  publish(address, color){
-    this._client.publish(address, color);
+  publish(address, message){
+    this._client.publish(address, message);
   }
-  
-  broadcast(color){
-    this._client.publish('/color', color);
-  }
+
 }
