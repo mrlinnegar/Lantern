@@ -1,51 +1,53 @@
-import Observable from '../lib/Observable'
+import Observable from '../lib/Observable';
 import LightData from './LightData';
 
 export default class Light extends Observable {
-  constructor(id){
+  constructor(id) {
+    if (!id) {
+      throw new Error('Light requires an ID');
+    }
+
     super();
-    this._lightData = new LightData(id, 0);
-    this._address = "/" + id;
-    this._lastSeen = new Date();
+    this.lightData = new LightData(id);
+    this.address = `/${id}`;
+    this.lastSeen = new Date();
   }
 
-  update(update = {}){
+  update(update = {}) {
+    this.lightData = Object.assign(new LightData(this.getId()), this.lightData, update);
 
-    this._lightData = Object.assign(new LightData(), this._lightData, update);
-
-    if(this._lightData.status){
+    if (this.lightData.status) {
       this.emit('LIGHT_ON', this);
     } else {
       this.emit('LIGHT_OFF', this);
     }
   }
 
-  isOn(){
-    return this._lightData.status;
+  isOn() {
+    return this.lightData.status;
   }
 
-  lastUpdated(){
-    return this._lightData.lastUpdated
+  lastUpdated() {
+    return this.lightData.lastUpdated;
   }
 
-  getData(){
-    return this._lightData;
+  getData() {
+    return this.lightData;
   }
 
-  getId(){
-    return this._lightData.id;
+  getId() {
+    return this.lightData.id;
   }
 
-  getColor(){
-    return this._lightData.color
+  getColor() {
+    return this.lightData.color;
   }
 
-  lastSeen(){
-    return this._lastSeen;
+  lastSeen() {
+    return this.lastSeen;
   }
 
-  setLastSeen(date){
-    this._lastSeen = date;
+  setLastSeen(date) {
+    this.lastSeen = date;
   }
-
 }
