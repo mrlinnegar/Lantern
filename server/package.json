@@ -9,7 +9,7 @@
     "client": "node start-client.js",
     "build": "babel lib -d dist",
     "serve": "node dist/index.js",
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha ./src/**/*.spec.js --compilers js:babel-register"
   },
   "author": "",
   "license": "ISC",

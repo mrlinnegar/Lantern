@@ -1,13 +1,16 @@
 import mqtt from 'mqtt';
 import Light from '../models/Light';
-import Comms from './LightingCommunication';
 import Observable from '../lib/Observable'
 
+const MAX_LIGHT_NO_COMMUNICATION = 15000
+const TIME_BETWEEN_CLEANUPS = 1000
+
 export default class LightingController extends Observable {
-  constructor(){
+  constructor(communication){
     super()
     this._lights = new Map();
-    this._comms = new Comms();
+    this._comms = communication;
+
     this._comms.init((topic, message)=>{
       this.handleMessage(topic, message)
     });
@@ -15,7 +18,7 @@ export default class LightingController extends Observable {
     this._clean = setInterval(()=>{
       const now = new Date()
       this.cleanLights(now)
-    },1000);
+    },TIME_BETWEEN_CLEANUPS);
 
   }
 
@@ -30,7 +33,7 @@ export default class LightingController extends Observable {
     if(!this._lights.has(id)){
       this.registerNewLight(id);
     } else {
-      this._lights.get(id).update({lastUpdated: new Date()});
+      this._lights.get(id).setLastSeen( new Date() );
       if(!color){
         this._lights.get(id).off();
       }
@@ -39,10 +42,9 @@ export default class LightingController extends Observable {
   }
 
   cleanLights(now) {
-    const MAX_LIGHT_NO_COMMUNICATION = 15000
 
     this._lights.forEach((light) => {
-      if((now - light.lastUpdated()) > MAX_LIGHT_NO_COMMUNICATION)  {
+      if((now - light.lastSeen()) > MAX_LIGHT_NO_COMMUNICATION)  {
         this.emit('SERVER_REMOVE_LIGHT', light.getId());
         this._lights.delete(light.getId())
       }
@@ -63,7 +65,7 @@ export default class LightingController extends Observable {
     });
 
     this._lights.set(id, light);
-    light.update({});
+    light.update();
 
     this.emit('SERVER_ADD_LIGHT', light.getData())
 

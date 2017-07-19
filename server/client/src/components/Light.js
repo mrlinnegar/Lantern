@@ -18,9 +18,18 @@ class Light extends React.Component {
           'default': {
             swatch: {
               backgroundColor: `#${ this.props.color}`,
+
+              borderTopColor: tinycolor(this.props.color).lighten(5),
+              borderLeftColor: tinycolor(this.props.color).lighten(5),
+              borderBottomColor: tinycolor(this.props.color).darken(5),
+              borderRightColor: tinycolor(this.props.color).darken(5),
+
+              boxShadow: `0 0 15px ${ tinycolor(this.props.color).darken(5)}`
             },
+
             selector: {
-              color: tinycolor(this.props.color).isDark()? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)'
+              textShadow: `1px 1px 2px ${ tinycolor(this.props.color).darken(5)}`,
+              color: tinycolor(this.props.color).isDark()? tinycolor(this.props.color).lighten(50) : tinycolor(this.props.color).darken(50)
             },
             popover: {
               position: 'absolute',
@@ -41,6 +50,7 @@ class Light extends React.Component {
         });
 
     return (
+      <div>
       <div className="Light"  style={ styles.swatch }>
         <div className="LightControls">
         <div>
@@ -58,11 +68,12 @@ class Light extends React.Component {
           <div style={ styles.cover } onClick={ this.props.closePalette }/>
             <GithubPicker
               width='100px'
-              colors={['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#FEFEFF', '#1273DE', '#0000FF', '#5300EB']}
+              colors={['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#FFFFFF', '#1273DE', '#0000FF', '#5300EB']}
               color={ this.props.color }
               onChangeComplete={ this.props.colorClick }
             />
         </div> : null }
+      </div>
       </div>
     )
   }

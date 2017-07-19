@@ -6,6 +6,7 @@ export default class Light extends Observable {
     super();
     this._lightData = new LightData(id, 0);
     this._address = "/" + id;
+    this._lastSeen = new Date();
   }
 
   update(update = {}){
@@ -27,9 +28,7 @@ export default class Light extends Observable {
     return this._lightData.lastUpdated
   }
 
-
   getData(){
-    console.log('get data', this._lightData);
     return this._lightData;
   }
 
@@ -39,6 +38,14 @@ export default class Light extends Observable {
 
   getColor(){
     return this._lightData.color
+  }
+
+  lastSeen(){
+    return this._lastSeen;
+  }
+
+  setLastSeen(date){
+    this._lastSeen = date;
   }
 
 }

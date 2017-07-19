@@ -3,10 +3,10 @@ import express from 'express';
 import light from './routes/light';
 import bodyparser from 'body-parser';
 import LightingController from './controllers/LightingController';
-import lightData from './validators/validators'
+import lightDataValidator from './validators/validators'
+import LightBroker from './lib/LightBroker';
 
-console.log(lightData({}));
-let lighting = new LightingController();
+let lighting = new LightingController( new LightBroker() );
 
 const app = express();
 
@@ -28,7 +28,6 @@ const server = app.listen(3001, () => {
 
 const io = require('socket.io').listen(server);
 
-
 lighting.addObserver('SERVER_ADD_LIGHT', (light)=> {
   io.sockets.emit('action', { type: 'SERVER_ADD_LIGHT', light: light })
 })
@@ -48,13 +47,17 @@ io.on('connection', (socket) => {
 
   socket.on('action', (action)=>{
     let light
-    console.log(action);
+
     switch (action.type) {
       case 'SERVER_LIGHT_COLOR':
-        light = lighting.getLightById(action.id)
-        light.update({color:action.color, status: 1})
+        try {
+          light = lighting.getLightById(action.id)
+          const validatedInput = lightDataValidator(action);
+          light.update(validatedInput)
+          socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: light.getData()})
+        } catch(e){
 
-        socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: light.getData()})
+        }
         break;
 
       case 'SERVER_TOGGLE_LIGHT':
@@ -63,6 +66,7 @@ io.on('connection', (socket) => {
         light.update({status:newStatus});
         socket.broadcast.emit('action', {type: 'SERVER_UPDATE_LIGHT', light: light.getData()})
         break;
+
       default:
         break;
     }

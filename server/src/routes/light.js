@@ -1,5 +1,5 @@
 import express from 'express';
-import lightData from '../validators/validators'
+import lightDataValidator from '../validators/validators'
 
 function createRoutes(lighting) {
   let router = express.Router();
@@ -21,11 +21,11 @@ function createRoutes(lighting) {
     const light = lighting.getLightById(req.params.light)
     if(light){
       try {
-        const validatedInput = lightData(req.body)
+        const validatedInput = lightDataValidator(req.body)
         light.update(validatedInput);
         res.json(light.getData());
       } catch (error) {
-        res.status(error.status).json(error);
+        res.status(error.code).json(error);
       }
 
     } else {

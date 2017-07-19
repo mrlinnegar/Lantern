@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 
-export default class Comms {
+export default class LightBroker {
 
   constructor(){
 

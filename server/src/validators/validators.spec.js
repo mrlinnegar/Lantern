@@ -1,13 +1,12 @@
-import 'babel-polyfill'
 const expect = require('chai').expect;
 
-import lightData from '../src/validators/validators.js';
+import lightDataValidator from './validators.js';
 
 describe('Light Validation', () => {
 
   it('should remove unwanted properties', ()=> {
       const inputData = { 'otherobject': 12345 }
-      const outputData = lightData(inputData)
+      const outputData = lightDataValidator(inputData)
       const expectedData = {}
 
       expect(outputData).to.deep.equal(expectedData)
@@ -19,7 +18,7 @@ describe('Light Validation', () => {
       const data = {};
 
       const test = function(){
-        lightData(data);
+        lightDataValidator(data);
       }
 
       expect(test).not.to.throw();
@@ -27,14 +26,14 @@ describe('Light Validation', () => {
 
     it('should return input object for valid on status code', ()=> {
       const testData = { status: 1};
-      const outputData = lightData(testData);
+      const outputData = lightDataValidator(testData);
 
       expect(outputData).to.deep.equal(testData);
     })
 
     it('should return input object for valid off status code', ()=> {
       const testData = { status: 0 }
-      const outputData = lightData(testData);
+      const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
     })
 
@@ -43,25 +42,25 @@ describe('Light Validation', () => {
         status: 2
       }
       const testFunction = ()=> {
-        lightData(testData)
+        lightDataValidator(testData)
       }
 
-      expect(testFunction).to.throw(Error)
+      expect(testFunction).to.throw()
     })
   })
 
-  describe('color', ()=> {
+  describe('Color', ()=> {
     it('should allow no color to be passed', ()=>{
       const data = {};
       const testFunction = function(){
-        lightData(data)
+        lightDataValidator(data)
       }
       expect(testFunction).not.to.throw
     })
 
     it('should return true when no color is passed', ()=>{
       const testData = {}
-      const outputData = lightData(testData);
+      const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
     })
 
@@ -69,7 +68,7 @@ describe('Light Validation', () => {
       const testData = {
         color: 'FFFFFF'
       }
-      const outputData = lightData(testData);
+      const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
     })
 
@@ -77,7 +76,7 @@ describe('Light Validation', () => {
       const testData = {
         color: 'ffffff'
       }
-      const outputData = lightData(testData);
+      const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData)
     })
 
@@ -86,9 +85,9 @@ describe('Light Validation', () => {
         color: 'NOTACOLOR'
       }
       const testFunction = ()=>{
-        lightData(testData)
+        lightDataValidator(testData)
       }
-      expect(testFunction).to.throw(Error)
+      expect(testFunction).to.throw()
 
     })
   })

@@ -34,6 +34,4 @@ class Light {
 
 }
 
-for(let i = 0; i < 100; i++) {
-  const light = new Light(Math.random());
-}
+new Light();
