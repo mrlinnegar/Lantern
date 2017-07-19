@@ -1,94 +1,91 @@
+import lightDataValidator from './validators';
+
 const expect = require('chai').expect;
 
-import lightDataValidator from './validators.js';
-
 describe('Light Validation', () => {
+  it('should remove unwanted properties', () => {
+    const inputData = { otherObject: 12345 };
+    const outputData = lightDataValidator(inputData);
+    const expectedData = {};
 
-  it('should remove unwanted properties', ()=> {
-      const inputData = { 'otherobject': 12345 }
-      const outputData = lightDataValidator(inputData)
-      const expectedData = {}
+    expect(outputData).to.deep.equal(expectedData);
+  });
 
-      expect(outputData).to.deep.equal(expectedData)
-  })
-
-  describe('Status', ()=> {
-
+  describe('Status', () => {
     it('should allow no status to be passed', () => {
       const data = {};
 
-      const test = function(){
+      const test = () => {
         lightDataValidator(data);
-      }
+      };
 
       expect(test).not.to.throw();
     });
 
-    it('should return input object for valid on status code', ()=> {
-      const testData = { status: 1};
+    it('should return input object for valid on status code', () => {
+      const testData = { status: 1 };
       const outputData = lightDataValidator(testData);
 
       expect(outputData).to.deep.equal(testData);
-    })
+    });
 
-    it('should return input object for valid off status code', ()=> {
-      const testData = { status: 0 }
+    it('should return input object for valid off status code', () => {
+      const testData = { status: 0 };
       const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
-    })
+    });
 
-    it('should throw an error for invalud status codes', ()=> {
+    it('should throw an error for invalud status codes', () => {
       const testData = {
-        status: 2
-      }
-      const testFunction = ()=> {
-        lightDataValidator(testData)
-      }
+        status: 2,
+      };
+      const testFunction = () => {
+        lightDataValidator(testData);
+      };
 
-      expect(testFunction).to.throw()
-    })
-  })
+      expect(testFunction).to.throw();
+    });
+  });
 
-  describe('Color', ()=> {
-    it('should allow no color to be passed', ()=>{
+  describe('Color', () => {
+    it('should allow no color to be passed', () => {
       const data = {};
-      const testFunction = function(){
-        lightDataValidator(data)
-      }
-      expect(testFunction).not.to.throw
-    })
+      const testFunction = () => {
+        lightDataValidator(data);
+      };
+      expect(testFunction).not.to.throw();
+    });
 
-    it('should return true when no color is passed', ()=>{
-      const testData = {}
+    it('should return true when no color is passed', () => {
+      const testData = {};
       const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
-    })
+    });
 
-    it('should return true when valid color is passed', ()=>{
+    it('should return true when valid color is passed', () => {
       const testData = {
-        color: 'FFFFFF'
-      }
+        color: 'FFFFFF',
+      };
       const outputData = lightDataValidator(testData);
       expect(outputData).to.deep.equal(testData);
-    })
+    });
 
-    it('should be case insensitive', ()=> {
+    it('should be case insensitive', () => {
       const testData = {
-        color: 'ffffff'
-      }
+        color: 'ffffff',
+      };
       const outputData = lightDataValidator(testData);
-      expect(outputData).to.deep.equal(testData)
-    })
+      expect(outputData).to.deep.equal(testData);
+    });
 
-    it('should throw an error when incorrect color is passed', ()=> {
+    it('should throw an error when incorrect color is passed', () => {
       const testData = {
-        color: 'NOTACOLOR'
-      }
-      const testFunction = ()=>{
-        lightDataValidator(testData)
-      }
-      expect(testFunction).to.throw()
-
-    })
-  })
+        color: 'NOTACOLOR',
+      };
+      const testFunction = () => {
+        lightDataValidator(testData);
+      };
+      expect(testFunction).to.throw();
+    });
+  });
 });
