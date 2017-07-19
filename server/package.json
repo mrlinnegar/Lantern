@@ -36,6 +36,8 @@
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.4.2",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "sinon": "^2.3.8",
+    "sinon-chai": "^2.12.0"
   }
 }

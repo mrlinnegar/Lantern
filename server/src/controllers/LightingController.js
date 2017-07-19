@@ -32,14 +32,14 @@ export default class LightingController extends Observable {
     } else {
       this.lights.get(id).setLastSeen(new Date());
       if (!color) {
-        this.lights.get(id).off();
+        this.lights.get(id).update({ status: 0 });
       }
     }
   }
 
   cleanLights(now) {
     this.lights.forEach((light) => {
-      if ((now - light.lastSeen()) > MAX_LIGHT_NO_COMMUNICATION) {
+      if ((now - light.getLastSeen()) > MAX_LIGHT_NO_COMMUNICATION) {
         this.emit('SERVER_REMOVE_LIGHT', light.getId());
         this.lights.delete(light.getId());
       }

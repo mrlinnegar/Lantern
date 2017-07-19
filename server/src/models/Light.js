@@ -43,7 +43,7 @@ export default class Light extends Observable {
     return this.lightData.color;
   }
 
-  lastSeen() {
+  getLastSeen() {
     return this.lastSeen;
   }
 

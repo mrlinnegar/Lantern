@@ -40,7 +40,7 @@ lighting.addObserver('SERVER_REMOVE_LIGHT', (id) => {
 });
 
 lighting.addObserver('SERVER_UPDATE_LIGHT', (updatedLight) => {
-  io.sockets.emit('action', { type: 'SERVER_UPDATE_LIGHT', updatedLight });
+  io.sockets.emit('action', { type: 'SERVER_UPDATE_LIGHT', light: updatedLight });
 });
 
 io.on('connection', (socket) => {
@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
       case SERVER_TOGGLE_LIGHT: {
         const toggledLight = lighting.getLightById(action.id);
         const newStatus = toggledLight.isOn() ? 0 : 1;
-        light.update({ status: newStatus });
+        toggledLight.update({ status: newStatus });
         socket.broadcast.emit('action', { type: 'SERVER_UPDATE_LIGHT', light: toggledLight.getData() });
         break;
       }
