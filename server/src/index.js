@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyparser from 'body-parser';
-import light from './routes/light';
+import light from './routes/Lights';
 
 import LightingController from './controllers/LightingController';
 import lightDataValidator from './validators/validators';

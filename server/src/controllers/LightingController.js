@@ -1,5 +1,6 @@
 import Light from '../models/Light';
 import Observable from '../lib/Observable';
+import LightNotFoundError from '../exceptions/LightNotFoundError';
 
 const MAX_LIGHT_NO_COMMUNICATION = 15000;
 const TIME_BETWEEN_CLEANUPS = 1000;
@@ -11,21 +12,22 @@ export default class LightingController extends Observable {
     this.lightBroker = lightBroker;
 
     this.lightBroker.init((topic, message) => {
-      this.handleMessage(topic, message);
+      this.handleMessage(message);
     });
 
+  }
+
+  setUpLightCleaning() {
     this.clean = setInterval(() => {
       const now = new Date();
       this.cleanLights(now);
     }, TIME_BETWEEN_CLEANUPS);
   }
 
-  handleMessage(topic, message) {
+  handleMessage(message) {
     const data = message.toString().split('|');
-
     const id = data[0];
     const color = data[1];
-
 
     if (!this.lights.has(id)) {
       this.registerNewLight(id);
@@ -48,7 +50,17 @@ export default class LightingController extends Observable {
 
   registerNewLight(id) {
     const newLight = new Light(id);
+    this.addLight(newLight);
+    newLight.update();
+    this.bindObservers(newLight);
+    this.emit('SERVER_ADD_LIGHT', newLight.getData());
+  }
 
+  addLight(id, newLight) {
+    this.lights.set(id, newLight);
+  }
+
+  bindObservers(newLight){
     newLight.addObserver('LIGHT_ON', (light) => {
       this.lightBroker.publish(light.address, light.getColor());
       this.emit('SERVER_UPDATE_LIGHT', light.getData());
@@ -58,11 +70,6 @@ export default class LightingController extends Observable {
       this.lightBroker.publish(light.address, '000000');
       this.emit('SERVER_UPDATE_LIGHT', light.getData());
     });
-
-    this.lights.set(id, newLight);
-    newLight.update();
-
-    this.emit('SERVER_ADD_LIGHT', newLight.getData());
   }
 
   getLights() {
@@ -75,6 +82,10 @@ export default class LightingController extends Observable {
 
   getLightById(id) {
     const light = this.lights.get(id);
-    return light;
+    if(light) {
+      return light;
+    } else {
+      throw new LightNotFoundError();
+    }
   }
 }

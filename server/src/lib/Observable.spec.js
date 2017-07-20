@@ -22,7 +22,7 @@ describe('Observable', () => {
       const observable = new Observable();
       const label = 'LABEL';
       const callback = sinon.spy();
-      observable.addObserver(label, callback)
+      observable.addObserver(label, callback);
       expect(observable.observers.size).to.be.equal(1);
       expect(observable.observers.get(label)).to.be.a('array');
       expect(observable.observers.get(label).length).to.equal(1);
