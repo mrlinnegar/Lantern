@@ -3,7 +3,7 @@ import mqtt from 'mqtt';
 export default class LightBroker {
 
   init(callback) {
-    this.client = mqtt.connect('mqtt://192.168.1.22');
+    this.client = mqtt.connect('mqtt://192.168.42.1');
 
     this.client.on('connect', () => {
       this.client.subscribe('/connect');

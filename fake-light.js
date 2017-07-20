@@ -2,7 +2,7 @@ const mqtt = require('mqtt');
 
 class Light {
   constructor(id = '12345') {
-    this.connection = mqtt.connect('mqtt://192.168.1.22');
+    this.connection = mqtt.connect('mqtt://192.168.42.1');
     this.ID = id;
     this.color = '';
 

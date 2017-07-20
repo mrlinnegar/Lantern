@@ -14,7 +14,7 @@ function createRoutes(lighting) {
       const light = lighting.getLightById(req.params.light);
       res.json(light.getData());
     } catch (error) {
-      res.status(error).json(error);
+      res.status(error.status).json(error);
     }
   });
 
@@ -25,7 +25,7 @@ function createRoutes(lighting) {
       light.update(validatedInput);
       res.json(light.getData());
     } catch (error) {
-      res.status(error.code).json(error);
+      res.status(error.status).json(error);
     }
   });
 

@@ -49,8 +49,9 @@ export default class LightingController extends Observable {
   }
 
   registerNewLight(id) {
+    console.log('adding new light', id);
     const newLight = new Light(id);
-    this.addLight(newLight);
+    this.addLight(id, newLight);
     newLight.update();
     this.bindObservers(newLight);
     this.emit('SERVER_ADD_LIGHT', newLight.getData());
@@ -74,7 +75,9 @@ export default class LightingController extends Observable {
 
   getLights() {
     const lights = [];
+    console.log(this.lights);
     this.lights.forEach((light) => {
+      console.log(light);
       lights.push(light.getData());
     });
     return lights;
