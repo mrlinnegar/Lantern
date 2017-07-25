@@ -15,6 +15,7 @@ export default class LightingController extends Observable {
       this.handleMessage(message);
     });
 
+    this.setUpLightCleaning();
   }
 
   setUpLightCleaning() {
