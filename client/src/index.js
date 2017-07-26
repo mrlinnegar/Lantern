@@ -9,7 +9,7 @@ import lightsApp from './reducers'
 
 
 import io from 'socket.io-client';
-let socket = io('http://localhost:3000');
+let socket = io('http://localhost:3001');
 let socketIoMiddleware = createSocketIoMiddleware(socket, "SERVER_");
 
 let store = createStore(lightsApp, {}, applyMiddleware(socketIoMiddleware));
