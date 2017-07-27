@@ -6,6 +6,9 @@ import LightingController from './controllers/LightingController';
 import lightDataValidator from './validators/validators';
 import LightBroker from './lib/LightBroker';
 
+const WebSocket = require('ws');
+const http = require('http');
+
 const SERVER_LIGHT_COLOR = 'SERVER_LIGHT_COLOR';
 const SERVER_TOGGLE_LIGHT = 'SERVER_TOGGLE_LIGHT';
 
@@ -19,7 +22,6 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-
 app.use(bodyparser.json());
 
 app.use((req, res, next) => {
@@ -30,51 +32,82 @@ app.use((req, res, next) => {
 
 app.use('/api/lights', light(lighting));
 
-const server = app.listen(3001, () => {
-  console.log('Listening on %d', 3001);
-});
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-const io = require('socket.io').listen(server);
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  })
+};
+
+
 
 lighting.addObserver('SERVER_ADD_LIGHT', (newLight) => {
-  io.sockets.emit('action', { type: 'SERVER_ADD_LIGHT', light: newLight });
+  wss.broadcast(JSON.stringify({ type: 'SERVER_ADD_LIGHT', light: newLight }));
 });
 
 lighting.addObserver('SERVER_REMOVE_LIGHT', (id) => {
-  io.sockets.emit('action', { type: 'SERVER_REMOVE_LIGHT', id });
+  wss.broadcast(JSON.stringify({ type: 'SERVER_REMOVE_LIGHT', id }));
 });
 
 lighting.addObserver('SERVER_UPDATE_LIGHT', (updatedLight) => {
-  io.sockets.emit('action', { type: 'SERVER_UPDATE_LIGHT', light: updatedLight });
+  wss.broadcast(JSON.stringify({ type: 'SERVER_UPDATE_LIGHT', light: updatedLight }));
 });
 
-io.on('connection', (socket) => {
-  const lights = lighting.getLights();
-  socket.emit('action', { type: 'SERVER_ALL_LIGHTS', data: lights });
 
-  socket.on('action', (action) => {
-    switch (action.type) {
-      case SERVER_LIGHT_COLOR: {
-        try {
-          const coloredLight = lighting.getLightById(action.id);
-          const validatedInput = lightDataValidator(action);
-          coloredLight.update(validatedInput);
-          socket.broadcast.emit('action', { type: 'SERVER_UPDATE_LIGHT', light: coloredLight.getData() });
-        } catch (e) {
-          console.warn(e);
+wss.on('connection', (ws, req) => {
+  const lights = lighting.getLights();
+  ws.send(JSON.stringify({ type: 'SERVER_ALL_LIGHTS', data: lights }));
+
+  ws.on('message', (message) => {
+    try {
+      const action = JSON.parse(message);
+
+      switch (action.type) {
+        case SERVER_LIGHT_COLOR: {
+          try {
+            const coloredLight = lighting.getLightById(action.id);
+            const validatedInput = lightDataValidator(action);
+            coloredLight.update(validatedInput);
+
+            wss.clients.forEach((client) => {
+              if(client !== ws && client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'SERVER_UPDATE_LIGHT', light: coloredLight.getData() }))
+              }
+            });
+
+          } catch (e) {
+            console.warn(e);
+          }
+          break;
         }
-        break;
+        case SERVER_TOGGLE_LIGHT: {
+          const toggledLight = lighting.getLightById(action.id);
+          const newStatus = toggledLight.isOn() ? 0 : 1;
+          toggledLight.update({ status: newStatus });
+
+          wss.clients.forEach((client) => {
+            if(client !== ws && client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({ type: 'SERVER_UPDATE_LIGHT', light: toggledLight.getData() }))
+            }
+          });
+
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      case SERVER_TOGGLE_LIGHT: {
-        const toggledLight = lighting.getLightById(action.id);
-        const newStatus = toggledLight.isOn() ? 0 : 1;
-        toggledLight.update({ status: newStatus });
-        socket.broadcast.emit('action', { type: 'SERVER_UPDATE_LIGHT', light: toggledLight.getData() });
-        break;
-      }
-      default: {
-        break;
-      }
+    } catch(e){
+      console.log('invalid input', e);
     }
   });
+
+});
+
+server.listen(3001, () => {
+    console.log('received: %s', server.address().port);
 });

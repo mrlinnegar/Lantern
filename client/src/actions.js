@@ -5,9 +5,20 @@ export const SERVER_REMOVE_LIGHT = 'SERVER_REMOVE_LIGHT'
 export const SERVER_LIGHT_COLOR = 'SERVER_LIGHT_COLOR'
 export const SERVER_ALL_LIGHTS = 'SERVER_ALL_LIGHTS'
 
+export const CONNECT = 'CONNECT'
+export const DISCONNECT = 'DISCONNECT'
 
 export const LIGHT_PALETTE_SHOW = 'LIGHT_PALETTE_SHOW'
 export const LIGHT_PALETTE_HIDE = 'LIGHT_PALETTE_HIDE'
+
+
+export function connect(url){
+  return { type: 'CONNECT', url}
+}
+
+export function disconnect(){
+  return { type: 'DISCONNECT' }
+}
 
 export function toggleLight(id) {
   return { type: SERVER_TOGGLE_LIGHT, id }
