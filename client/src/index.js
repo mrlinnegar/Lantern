@@ -37,7 +37,7 @@ const socketMiddleware = (function(){
         socket.onopen = onOpen(socket, store, action.token);
 
         break;
-        
+
       case 'DISCONNECT':
         if(socket != null) {
           socket.close();
@@ -55,7 +55,12 @@ const socketMiddleware = (function(){
 })();
 
 let store = createStore(lightsApp, {}, applyMiddleware(socketMiddleware));
-store.dispatch(connect('ws://localhost:3000/api'));
+
+const protocol = window.location.protocol.replace('http','ws')
+const host = window.location.hostname;
+const port = window.location.port;
+
+store.dispatch(connect(`${protocol}//${host}:${port}/api`));
 
 render(
   <Provider store={store}>
