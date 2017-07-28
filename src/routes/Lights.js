@@ -18,6 +18,26 @@ function createRoutes(lighting) {
     }
   });
 
+  router.get('/:light/on', (req, res) => {
+    try {
+      const light = lighting.getLightById(req.params.light);
+      light.update({status:1});
+      res.json(light.getData());
+    } catch (error) {
+      res.status(error.status).json(error);
+    }
+  });
+
+  router.get('/:light/off', (req, res) => {
+    try {
+      const light = lighting.getLightById(req.params.light);
+      light.update({status:0});
+      res.json(light.getData());
+    } catch (error) {
+      res.status(error.status).json(error);
+    }
+  });
+
   router.post('/:light', (req, res) => {
     try {
       const light = lighting.getLightById(req.params.light);
