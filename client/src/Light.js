@@ -90,7 +90,6 @@ class Light extends Component {
 
           },
         });
-
     return (
       <div className="Light">
 

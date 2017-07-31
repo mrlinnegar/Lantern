@@ -19,7 +19,7 @@ describe('LightBroker', () => {
 
       const broker = new LightBroker();
       broker.init();
-      stub.should.have.been.calledWith('mqtt://192.168.1.22');
+      stub.should.have.been.calledWith('mqtt://192.168.0.1');
     });
   });
 });

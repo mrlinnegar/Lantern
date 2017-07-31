@@ -43,6 +43,7 @@ export default class LightingController extends Observable {
   cleanLights(now) {
     this.lights.forEach((light) => {
       if ((now - light.getLastSeen()) > MAX_LIGHT_NO_COMMUNICATION) {
+        console.log('removing light', light.getId());
         this.emit('SERVER_REMOVE_LIGHT', light.getId());
         this.lights.delete(light.getId());
       }
@@ -50,35 +51,30 @@ export default class LightingController extends Observable {
   }
 
   registerNewLight(id) {
-    console.log('adding new light', id);
     const newLight = new Light(id);
     this.addLight(id, newLight);
-    newLight.update();
     this.bindObservers(newLight);
     this.emit('SERVER_ADD_LIGHT', newLight.getData());
+    newLight.update({status:0});
   }
 
   addLight(id, newLight) {
+    console.log('adding new light', id);
     this.lights.set(id, newLight);
   }
 
   bindObservers(newLight){
-    newLight.addObserver('LIGHT_ON', (light) => {
-      this.lightBroker.publish(light.address, light.getColor());
+
+    newLight.addObserver('LIGHT_UPDATE', (light) => {
+      this.lightBroker.publish(light.address, light.getColors());
       this.emit('SERVER_UPDATE_LIGHT', light.getData());
     });
 
-    newLight.addObserver('LIGHT_OFF', (light) => {
-      this.lightBroker.publish(light.address, '000000');
-      this.emit('SERVER_UPDATE_LIGHT', light.getData());
-    });
   }
 
   getLights() {
     const lights = [];
-    console.log(this.lights);
     this.lights.forEach((light) => {
-      console.log(light);
       lights.push(light.getData());
     });
     return lights;

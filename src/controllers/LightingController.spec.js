@@ -56,11 +56,11 @@ describe('LightingController', () => {
     it('it should register a new light for an unrecognised light ID', () => {
 
       const lighting = new LightingController(fakeBroker);
-      const stub = sinon.stub(lighting, 'registerNewLight');
+      const registerNewLightStub = sinon.stub(lighting, 'registerNewLight');
       const INCOMING_MESSAGE = '12345|000000';
 
       lighting.handleMessage(INCOMING_MESSAGE);
-      stub.should.have.been.calledWith('12345');
+      registerNewLightStub.should.have.been.calledWith('12345');
     });
 
 
