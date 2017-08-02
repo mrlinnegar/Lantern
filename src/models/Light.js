@@ -1,6 +1,8 @@
 import Observable from '../lib/Observable';
 import LightData from './LightData';
-import Bulb from './Bulb';
+import Rider from '../animations/Rider';
+import SolidColor from '../animations/SolidColor';
+import Twinkle from '../animations/Twinkle';
 
 const NUMBER_OF_BULBS = 5;
 
@@ -12,44 +14,22 @@ export default class Light extends Observable {
 
     super();
     this.lightData = new LightData(id);
-    this.address = `/${id}`;
+    this.address = `${id}`;
     this.lastSeen = new Date();
-    this.bulbs = [];
-
-    this.addBulbs();
+    this.animation = new Twinkle(this.lightData.color);
   }
 
-  addBulbs() {
-    for(let i = 0; i < NUMBER_OF_BULBS; i++){
-      this.bulbs.push(new Bulb());
-    }
-  }
-
-  update(update = {}) {
+  update(update = {}, notify = true) {
     this.lightData = Object.assign(new LightData(this.getId()), this.lightData, update);
+    this.animation = new Twinkle(this.lightData.color);
 
-    let newBulbs = [];
-
-    this.bulbs.map((bulb) => {
-      newBulbs.push(Object.assign(new Bulb(), bulb, update));
-    });
-
-    this.bulbs = newBulbs;
-
-    this.emit('LIGHT_UPDATE', this);
-
-    return;
-
-    if (this.lightData.status) {
-      this.emit('LIGHT_ON', this);
-    } else {
-      this.emit('LIGHT_OFF', this);
+    if(notify) {
+      this.emit('LIGHT_UPDATE', this);
     }
-
   }
 
   isOn() {
-    return this.lightData.status;
+    return this.lightData.status == 1;
   }
 
   lastUpdated() {
@@ -65,17 +45,12 @@ export default class Light extends Observable {
     return this.lightData.id;
   }
 
-  getColors() {
-    let colorString = '';
-
-    this.bulbs.map((bulb) => {
-        if(bulb.status === 1) {
-          colorString += bulb.color;
-        } else {
-          colorString += '000000';
-        }
-    });
-    return colorString;
+  getColor() {
+    if(this.lightData.status === 1) {
+      return this.lightData.color;
+    } else {
+      return '000000';
+    }
   }
 
   getLastSeen() {

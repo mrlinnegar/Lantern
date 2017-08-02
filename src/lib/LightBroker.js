@@ -15,6 +15,7 @@ export default class LightBroker {
   }
 
   publish(address, message) {
+    console.log(address, message);
     this.client.publish(address, message);
   }
 

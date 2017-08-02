@@ -15,7 +15,7 @@ export default class LightingController extends Observable {
       this.handleMessage(message);
     });
 
-    this.setUpLightCleaning();
+  //  this.setUpLightCleaning();
   }
 
   setUpLightCleaning() {
@@ -26,17 +26,12 @@ export default class LightingController extends Observable {
   }
 
   handleMessage(message) {
-    const data = message.toString().split('|');
-    const id = data[0];
-    const color = data[1];
+    const id = message.toString();
 
     if (!this.lights.has(id)) {
       this.registerNewLight(id);
     } else {
       this.lights.get(id).setLastSeen(new Date());
-      if (!color) {
-        this.lights.get(id).update({ status: 0 });
-      }
     }
   }
 
@@ -64,12 +59,16 @@ export default class LightingController extends Observable {
   }
 
   bindObservers(newLight){
-
     newLight.addObserver('LIGHT_UPDATE', (light) => {
-      this.lightBroker.publish(light.address, light.getColors());
+      let instruction = '';
+      if(light.isOn()){
+        instruction = light.animation.toString();
+      } else {
+        instruction = 'OFF|000000';
+      }
+      this.lightBroker.publish(light.address, instruction);
       this.emit('SERVER_UPDATE_LIGHT', light.getData());
     });
-
   }
 
   getLights() {
