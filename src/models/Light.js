@@ -16,12 +16,12 @@ export default class Light extends Observable {
     this.lightData = new LightData(id);
     this.address = `${id}`;
     this.lastSeen = new Date();
-    this.animation = new Twinkle(this.lightData.color);
+    this.animation = new Rider(this.lightData.color);
   }
 
   update(update = {}, notify = true) {
     this.lightData = Object.assign(new LightData(this.getId()), this.lightData, update);
-    this.animation = new Twinkle(this.lightData.color);
+    this.animation = new Rider(this.lightData.color);
 
     if(notify) {
       this.emit('LIGHT_UPDATE', this);
@@ -43,14 +43,6 @@ export default class Light extends Observable {
 
   getId() {
     return this.lightData.id;
-  }
-
-  getColor() {
-    if(this.lightData.status === 1) {
-      return this.lightData.color;
-    } else {
-      return '000000';
-    }
   }
 
   getLastSeen() {

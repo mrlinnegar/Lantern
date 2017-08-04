@@ -5,7 +5,7 @@ export default class Twinkle {
   constructor(color = 'FFFFFF') {
     this.color = color;
     this.frameRate = 8;
-    this.frameCount = 8;
+    this.frameCount = 16;
     this.data = [];
     this.constructAnimation();
   }
