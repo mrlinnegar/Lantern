@@ -57,56 +57,10 @@ describe('LightingController', () => {
 
       const lighting = new LightingController(fakeBroker);
       const registerNewLightStub = sinon.stub(lighting, 'registerNewLight');
-      const INCOMING_MESSAGE = '12345|000000';
+      const INCOMING_MESSAGE = '12345';
 
       lighting.handleMessage(INCOMING_MESSAGE);
       registerNewLightStub.should.have.been.calledWith('12345');
-    });
-
-
-    it('should set last seen for an existing light with a recognised ID', () => {
-      const fakeLight = {
-        setLastSeen: sinon.spy()
-      }
-      const lighting = new LightingController(fakeBroker);
-      const LIGHT_ID = '12345';
-      const INCOMING_MESSAGE = '12345|000000'
-      lighting.addLight(LIGHT_ID, fakeLight);
-
-      lighting.handleMessage(INCOMING_MESSAGE);
-
-      fakeLight.setLastSeen.should.have.been.called;
-
-    });
-
-    it('should update the status of an existing light without a color', () => {
-      const fakeLight = {
-        setLastSeen: sinon.spy(),
-        update: sinon.spy(),
-      }
-      const lighting = new LightingController(fakeBroker);
-      const LIGHT_ID = '12345';
-      const INCOMING_MESSAGE = '12345|'
-      lighting.addLight(LIGHT_ID, fakeLight);
-
-      lighting.handleMessage(INCOMING_MESSAGE);
-
-      fakeLight.update.should.have.been.calledWith({ status: 0 });
-    });
-
-    it('should not update the status of an existing light with a color', () => {
-      const fakeLight = {
-        setLastSeen: sinon.spy(),
-        update: sinon.spy(),
-      }
-      const lighting = new LightingController(fakeBroker);
-      const LIGHT_ID = '12345';
-      const INCOMING_MESSAGE = '12345|FFFFFF'
-      lighting.addLight(LIGHT_ID, fakeLight);
-
-      lighting.handleMessage(INCOMING_MESSAGE);
-
-      fakeLight.update.should.not.have.been.called;
     });
 
   });

@@ -1,17 +1,19 @@
 import { SERVER_TOGGLE_LIGHT,
          SERVER_LIGHT_COLOR,
+         SERVER_LIGHT_ANIMATION,
          SERVER_REMOVE_LIGHT,
          SERVER_UPDATE_LIGHT,
          SERVER_ADD_LIGHT,
          SERVER_ALL_LIGHTS,
          LIGHT_PALETTE_HIDE,
-         LIGHT_PALETTE_SHOW
+         LIGHT_PALETTE_SHOW,
+         LOAD_ANIMATIONS,
        } from './actions'
 
 import { combineReducers } from 'redux'
 
 function lights( state = [], action ){
-  console.log(action);
+
   switch(action.type){
     case SERVER_TOGGLE_LIGHT:
       return state.map((light) => {
@@ -34,6 +36,15 @@ function lights( state = [], action ){
         return light
       })
 
+    case SERVER_LIGHT_ANIMATION:
+      return state.map((light) => {
+        if(light.id === action.id) {
+          return Object.assign({}, light, {
+            animation: action.animation
+          })
+        }
+        return light
+      })
     case SERVER_UPDATE_LIGHT:
       return state.map((light) => {
         if(light.id === action.light.id) {
@@ -54,6 +65,7 @@ function lights( state = [], action ){
 
     case SERVER_ALL_LIGHTS:
       return action.data
+
 
     case LIGHT_PALETTE_HIDE:
       return state.map((light) => {
@@ -79,9 +91,19 @@ function lights( state = [], action ){
   }
 }
 
+function animations( state = [ 'None' ], action ){
+  console.log(action);
+  switch(action.type){
+    case LOAD_ANIMATIONS:
+      return ['None', 'Chaser', 'Rider', 'Twinkle'];
+    default:
+      return state;
+  }
+}
 
 const lightsApp = combineReducers({
-    lights
-})
+    lights,
+    animations
+});
 
 export default lightsApp;

@@ -1,29 +1,35 @@
 const BULBS_PER_FRAME = 5;
 
-export default class Chaser {
-  constructor(color = 'FFFFFF') {
-    this.color = color;
-    this.frameRate = 1;
-    this.frameCount = 5;
-    this.data = [];
+const Chaser = (function() {
 
-    this.constructAnimation();
-  }
+  const frameRate = 1;
+  const frameCount = 5;
 
-  constructAnimation() {
-    for(let frame = 0; frame < this.frameCount; frame++){
+  function constructAnimation(color) {
+    let data = [];
+    for(let frame = 0; frame < frameCount; frame++){
       for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
         if(frame == bulb){
-          this.data.push(this.color)
+          data.push(color)
         } else {
-          this.data.push('000000');
+          data.push('000000');
         }
       }
     }
+    return data;
   }
 
-  toString() {
-    const dataString = this.data.join('');
-    return `ANIM|${this.frameCount},${this.frameRate},${dataString}`;
+  function render(color = '00FF00') {
+    const data = constructAnimation(color);
+    const dataString = data.join('');
+    return `ANIM|${frameCount},${frameRate},${dataString}`;
   }
-}
+
+  return {
+    name: 'Chaser',
+    render: render
+  };
+
+})();
+
+export default Chaser;

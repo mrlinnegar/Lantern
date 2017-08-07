@@ -1,11 +1,19 @@
 import { connect } from 'react-redux'
-import { toggleLight, updateLightColor, removeLight, lightPaletteHide, lightPaletteShow } from '../actions'
+
+import { toggleLight,
+         updateLightColor,
+         updateLightAnimation,
+         removeLight,
+         lightPaletteHide,
+         lightPaletteShow } from '../actions'
+
 import LightList from '../components/LightList'
 
 
 const mapStateToProps = (state) => {
   return {
-    lights: state.lights
+    lights: state.lights,
+    animations: state.animations
   }
 }
 
@@ -25,6 +33,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     openPalette: ( id ) => {
       dispatch(lightPaletteShow( id ))
+    },
+    updateLightAnimation: ( id, animation ) => {
+      dispatch(updateLightAnimation( id, animation ))
     }
   }
 }

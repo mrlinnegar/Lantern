@@ -1,44 +1,56 @@
 const tinycolor = require("tinycolor2");
 const BULBS_PER_FRAME = 5;
 
-export default class Twinkle {
-  constructor(color = 'FFFFFF') {
-    this.color = color;
-    this.frameRate = 8;
-    this.frameCount = 16;
-    this.data = [];
-    this.constructAnimation();
-  }
+const Twinkle = (() => {
 
-  getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+    const frameRate = 8;
+    const frameCount = 16;
 
-  getColor(){
-    if(this.color != '000000') {
-      if(Math.random() > 0.25) {
-        return tinycolor(this.color).darken(this.getRandomInt(0,25)).toHex();
-      } else {
-        return tinycolor(this.color).lighten(this.getRandomInt(0,2)).toHex();
-      }
-    } else {
-      return '000000';
-    }
-  }
-
-  constructAnimation() {
     let data = [];
-    for(let frame = 0; frame < this.frameCount; frame++){
-      for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
-        this.data.push(this.getColor());
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function darkenColor(color){
+      if(color != '000000') {
+        if(Math.random() > 0.25) {
+          return tinycolor(color).darken(getRandomInt(0,25)).toHex();
+        } else {
+          return tinycolor(color).lighten(getRandomInt(0,2)).toHex();
+        }
+      } else {
+        return '000000';
       }
     }
-  }
 
-  toString() {
-    const dataString = this.data.join('');
-    return `ANIM|${this.frameCount},${this.frameRate},${dataString}`;
-  }
-}
+    function constructAnimation(color) {
+      let data = [];
+      for(let frame = 0; frame < frameCount; frame++){
+        for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
+          data.push(darkenColor(color));
+        }
+      }
+      return data;
+    }
+
+    function toDataString(data) {
+      const dataString = data.join('');
+      return `ANIM|${frameCount},${frameRate},${dataString}`;
+    }
+
+    function render(color = 'FFFFFF') {
+      const data = constructAnimation(color);
+      return toDataString(data);
+    }
+
+    return {
+      'name': 'Twinkle',
+      'render': render
+    };
+
+})();
+
+export default Twinkle;

@@ -1,7 +1,8 @@
 import LightDataError from '../exceptions/LightDataError';
+import Animations from '../animations/Animations';
 
 export default function lightDataValidator(data) {
-  const { status: s, color: c } = data;
+  const { status: s, color: c, animation: a } = data;
   const response = {};
 
   if (typeof s !== 'undefined') {
@@ -17,6 +18,13 @@ export default function lightDataValidator(data) {
       throw new LightDataError(400, 'Color is not a valid format');
     }
     response.color = c;
+  }
+
+  if (a) {
+    if(!Animations.get(a)){
+      throw new LightDataError(400, 'Animation name is not valid');
+    }
+    response.animation = a;
   }
 
   return response;

@@ -1,33 +1,41 @@
 import React from 'react'
 import Light from './Light'
-import './LightList.css'
+import Grid from 'material-ui/Grid';
+import { withStyles, createStyleSheet } from 'material-ui/styles';
 
+const styleSheet = createStyleSheet(theme => ({
+  root: {
+    flexGrow: 1,
+    marginTop: 30,
+    padding: '0 30px',
+  }
+}));
 
-class LightList extends React.Component {
+function LightList(props) {
 
+  const classes = props.classes;
 
-  render() {
-    return (
-      <div className="App">
-        <div className="App-intro">
-
-        {this.props.lights.map((light) =>
+  return (
+    <div className={classes.root}>
+    <Grid container>
+      <Grid item xs={4}>
+        {props.lights.map((light) =>
           <Light
             key={light.id}
             {...light}
-            toggleClick={ ()=> this.props.toggleLightClick(light.id)}
-            colorClick={ (color)=> this.props.updateLightColor(light.id, color.hex.replace('#','') )}
-            removeClick={ ()=> this.props.removeLightClick(light.id)}
-            closePalette = { ()=> this.props.closePalette(light.id)}
-            openPalette = { ()=> this.props.openPalette(light.id)}
+            toggleClick={ ()=> props.toggleLightClick(light.id)}
+            colorClick={ (color)=> props.updateLightColor(light.id, color.hex.replace('#','') )}
+            removeClick={ ()=> props.removeLightClick(light.id)}
+            closePalette = { ()=> props.closePalette(light.id)}
+            openPalette = { ()=> props.openPalette(light.id)}
+            animationClick = { (event, value) => props.updateLightAnimation(light.id, value)}
+            animations = { props.animations }
           />
         )}
+      </Grid>
+    </Grid>
+    </div>
+  );
 
-        </div>
-      </div>
-    );
-  }
 }
-
-
-export default LightList
+export default withStyles(styleSheet)(LightList);

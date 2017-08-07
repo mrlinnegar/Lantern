@@ -38,6 +38,7 @@ function createRoutes(lighting) {
     }
   });
 
+
   router.post('/:light', (req, res) => {
     try {
       const light = lighting.getLightById(req.params.light);

@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyparser from 'body-parser';
 import light from './routes/Lights';
+import animations from './routes/Animations';
 
 import LightingController from './controllers/LightingController';
 import lightDataValidator from './validators/validators';
@@ -11,6 +12,7 @@ const http = require('http');
 
 const SERVER_LIGHT_COLOR = 'SERVER_LIGHT_COLOR';
 const SERVER_TOGGLE_LIGHT = 'SERVER_TOGGLE_LIGHT';
+const SERVER_LIGHT_ANIMATION  = 'SERVER_LIGHT_ANIMATION';
 
 const lighting = new LightingController(new LightBroker());
 
@@ -31,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/lights', light(lighting));
-
+app.use('/api/animations', animations())
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
@@ -42,8 +44,6 @@ wss.broadcast = function broadcast(data) {
     }
   })
 };
-
-
 
 lighting.addObserver('SERVER_ADD_LIGHT', (newLight) => {
   wss.broadcast(JSON.stringify({ type: 'SERVER_ADD_LIGHT', light: newLight }));
@@ -84,6 +84,25 @@ wss.on('connection', (ws, req) => {
           }
           break;
         }
+
+        case SERVER_LIGHT_ANIMATION: {
+          try {
+            const light = lighting.getLightById(action.id);
+            const validatedInput = lightDataValidator(action);
+            light.update(validatedInput);
+
+            wss.clients.forEach((client) => {
+              if(client !== ws && client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'SERVER_UPDATE_LIGHT', light: coloredLight.getData() }))
+              }
+            });
+
+          } catch (e) {
+            console.warn(e);
+          }
+          break;
+        }
+
         case SERVER_TOGGLE_LIGHT: {
           const toggledLight = lighting.getLightById(action.id);
           const newStatus = toggledLight.isOn() ? 0 : 1;

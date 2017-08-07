@@ -3,7 +3,11 @@ export const SERVER_UPDATE_LIGHT = 'SERVER_UPDATE_LIGHT'
 export const SERVER_ADD_LIGHT = 'SERVER_ADD_LIGHT'
 export const SERVER_REMOVE_LIGHT = 'SERVER_REMOVE_LIGHT'
 export const SERVER_LIGHT_COLOR = 'SERVER_LIGHT_COLOR'
+export const SERVER_LIGHT_ANIMATION = 'SERVER_LIGHT_ANIMATION'
 export const SERVER_ALL_LIGHTS = 'SERVER_ALL_LIGHTS'
+
+
+export const LOAD_ANIMATIONS = 'LOAD_ANIMATIONS'
 
 export const CONNECT = 'CONNECT'
 export const DISCONNECT = 'DISCONNECT'
@@ -13,11 +17,11 @@ export const LIGHT_PALETTE_HIDE = 'LIGHT_PALETTE_HIDE'
 
 
 export function connect(url){
-  return { type: 'CONNECT', url}
+  return { type: CONNECT, url}
 }
 
 export function disconnect(){
-  return { type: 'DISCONNECT' }
+  return { type: DISCONNECT }
 }
 
 export function toggleLight(id) {
@@ -26,6 +30,10 @@ export function toggleLight(id) {
 
 export function updateLightColor(id, color){
   return { type: SERVER_LIGHT_COLOR, id, color }
+}
+
+export function updateLightAnimation(id, animation) {
+  return { type: SERVER_LIGHT_ANIMATION, id, animation}
 }
 
 export function serverUpdateLight(light) {
@@ -46,4 +54,8 @@ export function addLight(light) {
 
 export function removeLight(id) {
   return { type: SERVER_REMOVE_LIGHT, id}
+}
+
+export function loadAnimations(animations) {
+  return { type: LOAD_ANIMATIONS, animations }
 }

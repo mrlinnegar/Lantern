@@ -1,9 +1,13 @@
-export default class SolidColor {
-  constructor(color = 'FFFFFF') {
-    this.color = color;
+const SolidColor  = (function() {
+
+  function render(color = 'FFFFFF') {
+    return `COLOR|${color}`;
   }
 
-  toString() {
-    return `COLOR|${this.color}`;
+  return {
+    name: 'Solid',
+    render: render
   }
-}
+})();
+
+export default SolidColor;

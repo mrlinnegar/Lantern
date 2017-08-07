@@ -1,22 +1,19 @@
 const BULBS_PER_FRAME = 5;
 
-export default class Rider {
-  constructor(color = 'FF0000') {
-    this.color = color;
-    this.frameRate = 16;
-    this.frameCount = 8;
-    this.data = [];
+const Rider  = (function(){
 
-    this.constructAnimation();
-  }
+    const frameRate = 16;
+    const frameCount = 8;
 
-  constructAnimation() {
+
+  function constructAnimation(color) {
+    let data = [];
     for(let frame = 0; frame < 4; frame++){
       for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
         if(frame == bulb){
-          this.data.push(this.color)
+          data.push(color)
         } else {
-          this.data.push('000000');
+          data.push('000000');
         }
       }
     }
@@ -24,16 +21,25 @@ export default class Rider {
     for(let frame = 4; frame > 0; frame--){
       for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
         if(frame == bulb){
-          this.data.push(this.color)
+          data.push(color)
         } else {
-          this.data.push('000000');
+          data.push('000000');
         }
       }
     }
+    return data;
   }
 
-  toString() {
-    const dataString = this.data.join('');
-    return `ANIM|${this.frameCount},${this.frameRate},${dataString}`;
+  function render(color = 'FF0000') {
+    let data = constructAnimation(color)
+    const dataString = data.join('');
+    return `ANIM|${frameCount},${frameRate},${dataString}`;
   }
-}
+
+  return {
+    name: 'Rider',
+    render: render
+  }
+})()
+
+export default Rider;

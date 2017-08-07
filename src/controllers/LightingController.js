@@ -1,6 +1,7 @@
 import Light from '../models/Light';
 import Observable from '../lib/Observable';
 import LightNotFoundError from '../exceptions/LightNotFoundError';
+import Animations from '../animations/Animations';
 
 const MAX_LIGHT_NO_COMMUNICATION = 15000;
 const TIME_BETWEEN_CLEANUPS = 1000;
@@ -15,7 +16,7 @@ export default class LightingController extends Observable {
       this.handleMessage(message);
     });
 
-  //  this.setUpLightCleaning();
+    this.setUpLightCleaning();
   }
 
   setUpLightCleaning() {
@@ -38,7 +39,6 @@ export default class LightingController extends Observable {
   cleanLights(now) {
     this.lights.forEach((light) => {
       if ((now - light.getLastSeen()) > MAX_LIGHT_NO_COMMUNICATION) {
-        console.log('removing light', light.getId());
         this.emit('SERVER_REMOVE_LIGHT', light.getId());
         this.lights.delete(light.getId());
       }
@@ -46,7 +46,7 @@ export default class LightingController extends Observable {
   }
 
   registerNewLight(id) {
-    const newLight = new Light(id);
+    const newLight = new Light(id, this);
     this.addLight(id, newLight);
     this.bindObservers(newLight);
     this.emit('SERVER_ADD_LIGHT', newLight.getData());
@@ -54,15 +54,21 @@ export default class LightingController extends Observable {
   }
 
   addLight(id, newLight) {
-    console.log('adding new light', id);
     this.lights.set(id, newLight);
   }
 
   bindObservers(newLight){
     newLight.addObserver('LIGHT_UPDATE', (light) => {
       let instruction = '';
+
       if(light.isOn()){
-        instruction = light.animation.toString();
+        const lightData = light.getData();
+        const animation = Animations.get(lightData.animation);
+        if(animation)
+          instruction = animation.render(lightData.color);
+        else {
+          instruction = `COLOR|${lightData.color}`;
+        }
       } else {
         instruction = 'OFF|000000';
       }

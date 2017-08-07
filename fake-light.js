@@ -11,6 +11,7 @@ class Light {
       this.connection.subscribe(`/${this.ID}`);
 
       this.connection.on('message', (topic, message) => {
+        console.log('recieved instruction: ', message);
         this.color = message.toString();
       });
     });
@@ -20,7 +21,7 @@ class Light {
 
   enable() {
     this.timer = setInterval(() => {
-      const message = `${this.ID}|${this.color}`;
+      const message = `${this.ID}`;
       console.log(message);
       this.connection.publish('/connect', message);
     }, 5000);
