@@ -17,22 +17,28 @@ function LightList(props) {
 
   return (
     <div className={classes.root}>
-    <Grid container>
-      <Grid item xs={4}>
-        {props.lights.map((light) =>
+    <Grid container spacing={24}>
+
+    {props.lights.map((light) =>
+      <Grid item xs={3}>
           <Light
             key={light.id}
             {...light}
             toggleClick={ ()=> props.toggleLightClick(light.id)}
-            colorClick={ (color)=> props.updateLightColor(light.id, color.hex.replace('#','') )}
-            removeClick={ ()=> props.removeLightClick(light.id)}
-            closePalette = { ()=> props.closePalette(light.id)}
+
+            colorSelect={ (color)=> props.updateLightColor(light.id, color.hex.replace('#','') )}
+
             openPalette = { ()=> props.openPalette(light.id)}
-            animationClick = { (event, value) => props.updateLightAnimation(light.id, value)}
-            animations = { props.animations }
+            closePalette = { ()=> props.closePalette(light.id)}
+
+
+            animations =  { props.animations }
+            handleRequestClose  = { () => props.closeAnimations(light.id) }
+            handleClickMenuItem = { (event, value) => props.updateLightAnimation(light.id, value)}
+            handleClickListItem = { (event) => props.openAnimations(light.id, event.currentTarget) }
           />
-        )}
       </Grid>
+    )}
     </Grid>
     </div>
   );

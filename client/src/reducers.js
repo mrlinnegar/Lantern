@@ -7,13 +7,15 @@ import { SERVER_TOGGLE_LIGHT,
          SERVER_ALL_LIGHTS,
          LIGHT_PALETTE_HIDE,
          LIGHT_PALETTE_SHOW,
+         ANIMATION_SHOW,
+         ANIMATION_HIDE,
          LOAD_ANIMATIONS,
        } from './actions'
 
 import { combineReducers } from 'redux'
 
 function lights( state = [], action ){
-
+  console.log(action);
   switch(action.type){
     case SERVER_TOGGLE_LIGHT:
       return state.map((light) => {
@@ -86,6 +88,27 @@ function lights( state = [], action ){
         }
         return light;
       })
+
+    case ANIMATION_SHOW:
+      return state.map((light) => {
+        if(light.id === action.id) {
+          return Object.assign({}, light, {
+            animationPanel : true,
+            anchorEl: action.anchorEl
+          })
+        }
+        return light;
+      })
+
+    case ANIMATION_HIDE:
+      return state.map((light) => {
+        if(light.id === action.id) {
+          return Object.assign({}, light, {
+            animationPanel : false
+          })
+        }
+        return light;
+      })
     default:
       return state
   }
@@ -95,7 +118,7 @@ function animations( state = [ 'None' ], action ){
   console.log(action);
   switch(action.type){
     case LOAD_ANIMATIONS:
-      return ['None', 'Chaser', 'Rider', 'Twinkle'];
+      return ['None', 'Chaser', 'NYPD', 'Rider', 'Twinkle'];
     default:
       return state;
   }

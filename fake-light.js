@@ -36,3 +36,4 @@ class Light {
 }
 
 new Light();
+new Light('54321');

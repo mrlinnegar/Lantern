@@ -2,7 +2,7 @@ const BULBS_PER_FRAME = 5;
 
 const Chaser = (function() {
 
-  const frameRate = 1;
+  const frameRate = 5;
   const frameCount = 5;
 
   function constructAnimation(color) {

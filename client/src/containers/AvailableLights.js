@@ -5,7 +5,9 @@ import { toggleLight,
          updateLightAnimation,
          removeLight,
          lightPaletteHide,
-         lightPaletteShow } from '../actions'
+         lightPaletteShow,
+         animationPanelShow,
+         animationPanelHide } from '../actions'
 
 import LightList from '../components/LightList'
 
@@ -35,8 +37,15 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(lightPaletteShow( id ))
     },
     updateLightAnimation: ( id, animation ) => {
-      dispatch(updateLightAnimation( id, animation ))
-    }
+      dispatch(updateLightAnimation( id, animation ));
+      dispatch(animationPanelHide( id ));
+    },
+    openAnimations: ( id, anchorEl ) => {
+      dispatch(animationPanelShow( id, anchorEl ));
+    },
+    closeAnimations: ( id ) => {
+      dispatch(animationPanelHide( id ));
+    },
   }
 }
 

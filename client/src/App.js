@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import createMuiTheme from 'material-ui/styles/theme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -10,9 +9,12 @@ import AppHeader from './components/AppHeader';
 class App extends Component {
 
   render() {
+
+    const theme = createMuiTheme();
+
     return (
       <div className="App">
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <MuiThemeProvider theme={theme}>
           <div>
             <AppHeader />
             <AvailableLights />
