@@ -1,10 +1,5 @@
 import Observable from '../lib/Observable';
 import LightData from './LightData';
-import Rider from '../animations/Rider';
-import SolidColor from '../animations/SolidColor';
-import Twinkle from '../animations/Twinkle';
-import Chaser from '../animations/Chaser';
-
 
 const NUMBER_OF_BULBS = 5;
 
@@ -18,7 +13,6 @@ export default class Light extends Observable {
     this.lightData = new LightData(id);
     this.address = `${id}`;
     this.lastSeen = new Date();
-    this.animation = Rider;
   }
 
   update(update = {}, notify = true) {

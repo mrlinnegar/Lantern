@@ -1,13 +1,12 @@
-const SolidColor  = (function() {
+import Animation from './Animation'
 
-  function render(color = 'FFFFFF') {
-    return `COLOR|${color}`;
+export default class SolidColor extends Animation {
+  constructor(){
+    super('FFFFFF');
+    this.name = 'None';
   }
 
-  return {
-    name: 'Solid',
-    render: render
+  toString() {
+    return `COLOR|${this.defaultColor}`;
   }
-})();
-
-export default SolidColor;
+};

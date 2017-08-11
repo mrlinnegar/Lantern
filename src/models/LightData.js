@@ -1,3 +1,5 @@
+import SolidColor from '../animations/SolidColor'
+
 export default class LightData {
   constructor(id, status = 0, color = 'FFFFFF') {
     if (!id) {
@@ -6,6 +8,6 @@ export default class LightData {
     this.id = id;
     this.status = status;
     this.color = color;
-    this.animation = 'None';
+    this.animation = new SolidColor();
   }
 }

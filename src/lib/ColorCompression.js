@@ -1,7 +1,4 @@
 
-
-
-
 function toRGB(hexInput){
     let red = hexInput.substring(0,2);
     let green = hexInput.substring(2,4);
@@ -37,7 +34,7 @@ const ColorCompression = {
     let output = colors.map((color) => {
       return toAscii(color);
     });
-    
+
     return output.join('');
   },
 

@@ -1,57 +1,36 @@
-const BULBS_PER_FRAME = 5;
+import Animation from './Animation';
 
-const NYPD = (() => {
+const frameRate = 16;
+const numberOfFrames = 16;
+const numberOfBulbs = 5;
+const RED = 'FF0000';
+const BLUE = '0000FF';
+const OFF = '000000';
 
-    const frameRate = 14;
-    const frameCount = 14;
+export default class NYPD extends Animation {
+  constructor(){
+    super('000000', numberOfFrames, numberOfBulbs, frameRate);
+    this.name = 'NYPD';
+    this.constructAnimation();
+  }
 
-    const RED = 'FF0000';
-    const BLUE = '0000FF';
-    const OFF = '000000';
+  constructAnimation(){
+    this.data[0] = this.fillFrame(RED);
+    this.data[1] = this.fillFrame(OFF);
+    this.data[2] = this.fillFrame(RED);
+    this.data[3] = this.fillFrame(OFF);
+    this.data[4] = this.fillFrame(RED);
+    this.data[5] = this.fillFrame(OFF);
+    this.data[6] = this.fillFrame(OFF);
+    this.data[7] = this.fillFrame(OFF);
+    this.data[8] = this.fillFrame(BLUE);
+    this.data[9] = this.fillFrame(OFF);
+    this.data[10] = this.fillFrame(BLUE);
+    this.data[11] = this.fillFrame(OFF);
+    this.data[12] = this.fillFrame(BLUE);
+    this.data[13] = this.fillFrame(OFF);
+    this.data[14] = this.fillFrame(OFF);
+    this.data[15] = this.fillFrame(OFF);
+  }
 
-    function fillFrame(data, color = '000000'){
-      for(let bulb = 0; bulb < BULBS_PER_FRAME; bulb++){
-        data.push(color);
-      }
-      return data;
-    }
-
-    function constructAnimation() {
-      let data = [];
-
-      data = fillFrame(data, RED);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, RED);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, RED);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, BLUE);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, BLUE);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, OFF);
-      data = fillFrame(data, OFF);
-
-      return data;
-    }
-
-    function toDataString(data) {
-      const dataString = data.join('');
-      return `ANIM|${frameCount},${frameRate},${dataString}`;
-    }
-
-    function render() {
-      const data = constructAnimation();
-      return toDataString(data);
-    }
-
-    return {
-      'name': 'NYPD',
-      'render': render
-    };
-
-})();
-
-export default NYPD;
+}

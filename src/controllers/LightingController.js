@@ -63,9 +63,9 @@ export default class LightingController extends Observable {
 
       if(light.isOn()){
         const lightData = light.getData();
-        const animation = Animations.get(lightData.animation);
+        const animation = lightData.animation;
         if(animation)
-          instruction = animation.render(lightData.color);
+          instruction = animation.toString();
         else {
           instruction = `COLOR|${lightData.color}`;
         }
