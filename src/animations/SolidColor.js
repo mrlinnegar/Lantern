@@ -1,12 +1,19 @@
 import Animation from './Animation'
 
+const FRAME_RATE = 1;
+const NUMBER_OF_FRAMES = 1;
+const NUMBER_OF_BULBS = 5;
+
+
 export default class SolidColor extends Animation {
-  constructor(){
-    super('FFFFFF');
+  constructor(color = 'FFFFFF'){
+    super(color, NUMBER_OF_FRAMES, FRAME_RATE);
     this.name = 'None';
+    this.constructAnimation();
   }
 
-  toString() {
-    return `COLOR|${this.defaultColor}`;
+  constructAnimation(){
+    this.data = []
+    this.data.push(this.fillFrame(this.defaultColor));
   }
 };

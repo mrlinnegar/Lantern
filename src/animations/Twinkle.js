@@ -1,14 +1,18 @@
 import Animation from './Animation'
-
 const tinycolor = require("tinycolor2");
-const frameRate = 8;
-const numberOfFrames = 16;
+
+const FRAME_RATE = 8;
+const NUMBER_OF_FRAMES = 16;
+const NUMBER_OF_BULBS = 5;
 
 export default class Twinkle extends Animation {
   constructor(color = '800813'){
-    super(color, numberOfFrames, 5, frameRate);
+    super(color, NUMBER_OF_FRAMES, FRAME_RATE);
     this.name = 'Twinkle';
-    this.constructAnimation()
+    this.colors = [
+      color
+    ];
+    this.constructAnimation();
   }
 
   getRandomInt(min, max) {
@@ -18,6 +22,7 @@ export default class Twinkle extends Animation {
   }
 
   darkenColor(color){
+
     if(color != '000000') {
       if(Math.random() > 0.25) {
         return tinycolor(color).darken(this.getRandomInt(0,25)).toHex();
@@ -29,14 +34,13 @@ export default class Twinkle extends Animation {
     }
   }
 
-  constructAnimation(color) {
-    let data = [];
+  constructAnimation() {
+
     for(let frame = 0; frame < this.numberOfFrames; frame++){
-      for(let bulb = 0; bulb < this.numberOfBulbs; bulb++){
+      for(let bulb = 0; bulb < NUMBER_OF_BULBS; bulb++){
         this.data[frame][bulb] = this.darkenColor(this.defaultColor);
       }
     }
-    return data;
   }
 
 }

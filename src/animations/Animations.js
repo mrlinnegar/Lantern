@@ -1,11 +1,13 @@
 import SolidColor from './SolidColor';
-import NYPD from './NYPD';
 import Twinkle from './Twinkle';
+import Blink from './Blink';
+import Pulse from './Pulse';
 
 let Animations = new Map();
 
 Animations.set('None', SolidColor);
-Animations.set('NYPD', NYPD);
+Animations.set('Blink', Blink);
 Animations.set('Twinkle', Twinkle);
+Animations.set('Pulse', Pulse);
 
 export default Animations;

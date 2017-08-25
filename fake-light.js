@@ -2,7 +2,7 @@ const mqtt = require('mqtt');
 
 class Light {
   constructor(id = '12345') {
-    this.connection = mqtt.connect('mqtt://localhost');
+    this.connection = mqtt.connect(`mqtt://${process.env.MQTT_HOST}`);
     this.ID = id;
     this.color = '';
 
@@ -14,6 +14,10 @@ class Light {
         console.log('recieved instruction: ', message);
         this.color = message.toString();
       });
+
+      this.connection.on('error', () => {
+        console.log('connection error');
+      });
     });
 
     this.enable();
@@ -21,7 +25,7 @@ class Light {
 
   enable() {
     this.timer = setInterval(() => {
-      const message = `${this.ID}`;
+      const message = `${this.ID}|888888`;
       console.log(message);
       this.connection.publish('/connect', message);
     }, 5000);

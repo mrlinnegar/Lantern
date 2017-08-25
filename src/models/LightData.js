@@ -8,6 +8,8 @@ export default class LightData {
     this.id = id;
     this.status = status;
     this.color = color;
-    this.animation = new SolidColor();
+    this.animation = 'None';
+    this.lastSeen = new Date();
+    this.memory = 0;
   }
 }

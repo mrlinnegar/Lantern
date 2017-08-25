@@ -8,13 +8,11 @@ const OFF = '000000';
 export default class Animation {
   constructor(defaultColor = OFF,
               numberOfFrames = NUMBER_OF_FRAMES,
-              numberOfBulbs = NUMBER_OF_BULBS,
               frameRate = FRAMES_PER_SECOND,
               ) {
 
     this.name = 'Animation';
     this.numberOfFrames = numberOfFrames;
-    this.numberOfBulbs = numberOfBulbs;
     this.frameRate = frameRate;
     this.defaultColor = defaultColor;
     this.data = this.constructDefaultAnimation();
@@ -30,7 +28,7 @@ export default class Animation {
 
   fillFrame(color = OFF) {
     let frame = [];
-    for(let bulb = 0; bulb < this.numberOfBulbs; bulb++){
+    for(let bulb = 0; bulb < NUMBER_OF_BULBS; bulb++){
       frame[bulb] = color;
     }
     return frame;
@@ -40,15 +38,14 @@ export default class Animation {
     let output = [];
 
     this.data.map((frame)=> {
-
-      frame.map((bulb) => {
-        output.push(bulb);
+      frame.map((bulbColor) => {
+        output.push(ColorCompression.compress(bulbColor));
       });
     });
 
     const dataString = output.join('');
-
-    return `ANIM|${this.numberOfFrames},${this.frameRate},${dataString}`;
+    const instruction = `ANIM|${this.numberOfFrames},${this.frameRate},${dataString}`;
+    return instruction;
 
   }
 

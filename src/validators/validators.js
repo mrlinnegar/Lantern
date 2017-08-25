@@ -23,11 +23,8 @@ export default function lightDataValidator(data) {
   if (a) {
     if(!Animations.get(a)){
       throw new LightDataError(400, 'Animation name is not valid');
-    } else {
-      const animation = Animations.get(a);
-      response.animation = new animation();
     }
-
+    response.animation = a;
   }
 
   return response;
