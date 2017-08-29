@@ -9,6 +9,20 @@ function createRoutes(lighting) {
     res.json(lights);
   });
 
+  router.get('/random', (req, res) => {
+    try {
+      const lights = lighting.getLights();
+      const random = Math.floor(Math.random() * lights.length);
+      const light = lighting.getLightById(lights[random].id);
+      const update = {color: Math.floor(Math.random()*16777215).toString(16)};
+      light.update(update);
+      res.json(light.getData());
+    } catch (error) {
+      console.log(error);
+      res.status(error.status).json(error);
+    }
+  });
+
   router.get('/:light', (req, res) => {
     try {
       const light = lighting.getLightById(req.params.light);
