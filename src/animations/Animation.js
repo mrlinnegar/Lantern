@@ -34,6 +34,10 @@ export default class Animation {
     return frame;
   }
 
+  getData() {
+    return this.data;
+  }
+
   toString() {
     let output = [];
 

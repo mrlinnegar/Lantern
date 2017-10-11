@@ -1,9 +1,6 @@
 import express from 'express';
 import bodyparser from 'body-parser';
 import lightRoutes from './routes/Lights';
-import animations from './routes/Animations';
-import lightDataValidator from './validators/validators';
-
 
 const createApplication = (lighting) => {
   const app = express();
@@ -17,7 +14,6 @@ const createApplication = (lighting) => {
   });
 
   app.use('/api/lights', lightRoutes(lighting));
-  app.use('/api/animations', animations());
 
   return app;
 }

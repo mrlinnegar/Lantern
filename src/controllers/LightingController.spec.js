@@ -1,4 +1,4 @@
-import LightingController from './LightingController';
+import LightRespository from './LightRespository';
 import LightNotFoundError from '../exceptions/LightNotFoundError';
 
 const chai = require('chai');
@@ -10,7 +10,7 @@ chai.use(sinonChai);
 chai.should();
 
 
-describe('LightingController', () => {
+describe('LightRespository', () => {
   let fakeBroker;
   let fakeLight;
 
@@ -25,17 +25,17 @@ describe('LightingController', () => {
 
   describe('constructor', () => {
     it('should allow observers to subscribe to it', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       expect(lighting.addObserver).to.be.a('function');
     });
 
     it('should call init on the light broker', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       fakeBroker.init.should.have.been.called;
     });
 
     it('should create an empty map for lights', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       expect(lighting.lights).to.be.a('map');
       expect(lighting.lights.size).to.equal(0);
     });
@@ -44,7 +44,7 @@ describe('LightingController', () => {
 
   describe('addLight', () => {
     it('should add a new light to the lights map', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       const fakeLight = "FAKELIGHT";
       const LIGHT_ID = '12345';
       lighting.addLight(LIGHT_ID, fakeLight);
@@ -55,7 +55,7 @@ describe('LightingController', () => {
   describe('handleMessage', () => {
     it('it should register a new light for an unrecognised light ID', () => {
 
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       const registerNewLightStub = sinon.stub(lighting, 'registerNewLight');
       const INCOMING_MESSAGE = '12345';
 
@@ -75,14 +75,14 @@ describe('LightingController', () => {
 
   describe('getLights', () => {
     it('should return an empty array if there are no lights', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       const lights = lighting.getLights();
       expect(lights).to.be.an('array');
       expect(lights.length).to.equal(0);
     });
 
     it('should return an array of light data if there are lights', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
 
       const fakeLight = {
         getData: sinon.stub().returns('TESTDATA')
@@ -100,7 +100,7 @@ describe('LightingController', () => {
 
   describe('getLightById', () => {
     it('should throw an error no light', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
 
       const testFunction = () => {
         lighting.getLightById('12345');
@@ -110,7 +110,7 @@ describe('LightingController', () => {
     });
 
     it('should return a light with a correct id', () => {
-      const lighting = new LightingController(fakeBroker);
+      const lighting = new LightRespository(fakeBroker);
       const fakeLight = 'fakeLight';
       const fakeLightId = '12345';
 

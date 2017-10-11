@@ -19,4 +19,8 @@ export default class LightBroker {
     this.client.publish(address, message);
   }
 
+  broadcast(message) {
+    this.client.publish('/color', message);
+  }
+
 }

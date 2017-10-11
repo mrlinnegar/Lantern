@@ -1,70 +1,67 @@
 import express from 'express';
-import lightDataValidator from '../validators/validators';
+import { lightDataValidator, colorValidator } from '../validators/validators';
+import LightDataError from '../exceptions/LightDataError';
+import Twinkle from '../animations/Twinkle';
 
 function createRoutes(lighting) {
-  const router = express.Router();
+    const router = express.Router();
 
-  router.get('/', (req, res) => {
-    const lights = lighting.getLights();
-    res.json(lights);
-  });
+    router.get('/', (req, res) => {
+        const lights = lighting.getLightsData();
+        res.json(lights);
+    });
 
-  router.get('/random', (req, res) => {
-    try {
-      const lights = lighting.getLights();
-      const random = Math.floor(Math.random() * lights.length);
-      const light = lighting.getLightById(lights[random].id);
-      const update = {color: Math.floor(Math.random()*16777215).toString(16)};
-      light.update(update);
-      res.json(light.getData());
-    } catch (error) {
-      console.log(error);
-      res.status(error.status).json(error);
-    }
-  });
-
-  router.get('/:light', (req, res) => {
-    try {
-      const light = lighting.getLightById(req.params.light);
-      res.json(light.getData());
-    } catch (error) {
-      res.status(error.status).json(error);
-    }
-  });
-
-  router.get('/:light/on', (req, res) => {
-    try {
-      const light = lighting.getLightById(req.params.light);
-      light.update({status:1});
-      res.json(light.getData());
-    } catch (error) {
-      res.status(error.status).json(error);
-    }
-  });
-
-  router.get('/:light/off', (req, res) => {
-    try {
-      const light = lighting.getLightById(req.params.light);
-      light.update({status:0});
-      res.json(light.getData());
-    } catch (error) {
-      res.status(error.status).json(error);
-    }
-  });
+    router.post('/', (req, res) => {
+        try {
+            const validatedInput = lightDataValidator(req.body);
+            const lights = lighting.getLights();
+            lights.forEach((light) => {
+                light.update(validatedInput);
+            });
+            res.json(lighting.getLightsData());
+        } catch (error) {
+            res.status(error.status||500).json(error);
+        }
+    });
 
 
-  router.post('/:light', (req, res) => {
-    try {
-      const light = lighting.getLightById(req.params.light);
-      const validatedInput = lightDataValidator(req.body);
-      light.update(validatedInput);
-      res.json(light.getData());
-    } catch (error) {
-      res.status(error.status).json(error);
-    }
-  });
+    router.post('/color', (req, res) => {
 
-  return router;
+        try {
+            const color = colorValidator(req.body.color);
+            const data = new Twinkle(color).getData();
+            const validatedInput = {data: data, status: 1, fps: 8};
+            const light = lighting.getRandomLight();
+
+            light.update(validatedInput);
+
+            res.json(lighting.getLightsData());
+        } catch(error) {
+            res.status(error.status || 500).json(error || "Oops something went wrong");
+        }
+    });
+
+    router.get('/:light', (req, res) => {
+        try {
+            const light = lighting.getLightById(req.params.light);
+            res.json(light.getData());
+        } catch (error) {
+            res.status(error.status).json(error);
+        }
+    });
+
+    router.post('/:light', (req, res) => {
+        try {
+            const light = lighting.getLightById(req.params.light);
+            const validatedInput = lightDataValidator(req.body);
+            light.update(validatedInput);
+            res.json(light.getData());
+        } catch (error) {
+            res.status(error.status).json(error);
+        }
+    });
+
+    return router;
 }
 
 export default createRoutes;

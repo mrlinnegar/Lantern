@@ -5,17 +5,13 @@ import LightNotFoundError from '../exceptions/LightNotFoundError';
 import {
   SERVER_ADD_LIGHT,
   SERVER_REMOVE_LIGHT,
-  SERVER_UPDATE_LIGHT,
-  SERVER_ALL_LIGHTS,
-  SERVER_LIGHT_COLOR,
-  SERVER_TOGGLE_LIGHT,
-  SERVER_LIGHT_ANIMATION,
+  SERVER_UPDATE_LIGHT
 } from '../actions';
 
 const MAX_LIGHT_NO_COMMUNICATION = 15000;
 const TIME_BETWEEN_CLEANUPS = 1000;
 
-export default class LightingController extends Observable {
+export default class LightRespository extends Observable {
   constructor(lightBroker) {
     super();
     this.lights = new Map();
@@ -39,10 +35,11 @@ export default class LightingController extends Observable {
     const data = message.toString().split("|");
     const id = data[0];
     const memory = data[1];
+    const status = data[2];
     if (!this.lights.has(id)) {
       this.registerNewLight(id);
     } else {
-      this.lights.get(id).setLastSeen(new Date(), memory);
+      this.lights.get(id).setLastSeen(new Date(), memory, status);
     }
   }
 
@@ -60,9 +57,8 @@ export default class LightingController extends Observable {
     this.lights.set(id, newLight);
     this.bindObservers(newLight);
     this.emit(SERVER_ADD_LIGHT, newLight.getData());
-    newLight.update({status:0});
+    newLight.update({status:1});
   }
-
 
   bindObservers(newLight){
     newLight.addObserver('LIGHT_UPDATE', (light) => {
@@ -71,6 +67,17 @@ export default class LightingController extends Observable {
   }
 
   getLights() {
+    return this.lights;
+  }
+
+
+  getRandomLight() {
+      const index  = Math.floor(Math.random() * this.lights.size)
+      const key = Array.from(this.lights.keys())[index];
+      return this.lights.get(key);
+  }
+
+  getLightsData() {
     const lights = [];
     this.lights.forEach((light) => {
       lights.push(light.getData());
