@@ -2,7 +2,6 @@ import Animation from './Animation'
 
 const FRAME_RATE = 1;
 const NUMBER_OF_FRAMES = 1;
-const NUMBER_OF_BULBS = 5;
 
 
 export default class SolidColor extends Animation {

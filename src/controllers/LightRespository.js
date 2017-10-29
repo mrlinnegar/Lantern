@@ -77,7 +77,7 @@ export default class LightRespository extends Observable {
       return this.lights.get(key);
   }
 
-  getLightsData() {
+  getAllLightsData() {
     const lights = [];
     this.lights.forEach((light) => {
       lights.push(light.getData());

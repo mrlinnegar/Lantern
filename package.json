@@ -9,7 +9,7 @@
     "build": "babel lib -d dist",
     "serve": "node dist/index.js",
     "test": "mocha ./src/**/*.spec.js --compilers js:babel-register",
-    "light": "MQTT_HOST=localhost node fake-light.js"
+    "light": "node fake-light.js"
   },
   "author": "",
   "license": "ISC",

@@ -38,7 +38,7 @@ const createServer = (server, lighting)=> {
 
 
   wss.on('connection', (ws, req) => {
-    const lights = lighting.getLightsData();
+    const lights = lighting.getAllLightsData();
     ws.send(JSON.stringify({ type: SERVER_ALL_LIGHTS, data: lights }));
   });
 

@@ -1,13 +1,12 @@
 import express from 'express';
 import { lightDataValidator, colorValidator } from '../validators/validators';
-import LightDataError from '../exceptions/LightDataError';
-import Twinkle from '../animations/Twinkle';
+import AnimationList from '../animations/AnimationList';
 
 function createRoutes(lighting) {
     const router = express.Router();
 
     router.get('/', (req, res) => {
-        const lights = lighting.getLightsData();
+        const lights = lighting.getAllLightsData();
         res.json(lights);
     });
 
@@ -18,7 +17,7 @@ function createRoutes(lighting) {
             lights.forEach((light) => {
                 light.update(validatedInput);
             });
-            res.json(lighting.getLightsData());
+            res.json(lighting.getAllLightsData());
         } catch (error) {
             res.status(error.status||500).json(error);
         }
@@ -29,13 +28,14 @@ function createRoutes(lighting) {
 
         try {
             const color = colorValidator(req.body.color);
-            const data = new Twinkle(color).getData();
+            const randomAnimation = AnimationList.random();
+            const data = new randomAnimation(color).getData();
             const validatedInput = {data: data, status: 1, fps: 8};
             const light = lighting.getRandomLight();
 
             light.update(validatedInput);
 
-            res.json(lighting.getLightsData());
+            res.json(lighting.getAllLightsData());
         } catch(error) {
             res.status(error.status || 500).json(error || "Oops something went wrong");
         }

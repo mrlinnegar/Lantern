@@ -7,8 +7,7 @@ describe('Light Validation', () => {
     const inputData = { otherObject: 12345 };
     const outputData = lightDataValidator(inputData);
     const expectedData = {};
-
-    expect(outputData).to.deep.equal(expectedData);
+      expect(outputData).to.deep.equal(expectedData);
   });
 
   describe('Status', () => {
@@ -35,9 +34,9 @@ describe('Light Validation', () => {
       expect(outputData).to.deep.equal(testData);
     });
 
-    it('should throw an error for invalud status codes', () => {
+    it('should throw an error for invalid status codes', () => {
       const testData = {
-        status: 2,
+        status: 3,
       };
       const testFunction = () => {
         lightDataValidator(testData);

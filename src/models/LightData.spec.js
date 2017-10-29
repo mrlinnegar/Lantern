@@ -17,9 +17,5 @@ describe('LightData', () => {
       expect(lightData.status).to.equal(0);
     });
 
-    it('should have default color', () => {
-      const lightData = new LightData('12345');
-      expect(lightData.color).to.equal('FFFFFF');
-    });
   });
 });

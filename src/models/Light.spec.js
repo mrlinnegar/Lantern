@@ -14,7 +14,7 @@ describe('Light', () => {
 
     it('should set the address url to the passed id', () => {
       const light = new Light('ID');
-      expect(light.address).to.equal('ID');
+      expect(light.address).to.equal('/ID');
     });
   });
 });

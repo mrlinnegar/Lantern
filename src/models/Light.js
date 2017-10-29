@@ -39,6 +39,15 @@ export default class Light extends Observable {
     getInstruction() {
         let instruction = '';
 
+        switch(this.lightData.status){
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
         if (this.lightData.status == 1) {
             const lightData = this.getData();
             instruction = LightInstruction.animate(lightData.data, lightData.fps, lightData.loop);

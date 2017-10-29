@@ -1,4 +1,4 @@
-import SolidColor from '../animations/SolidColor';
+import Blink from '../animations/Blink';
 
 export default class LightData {
   constructor(id, status = 0) {
@@ -11,7 +11,7 @@ export default class LightData {
     this.memory = 0;
     this.fps = 1;
     this.loop = 1;
-    this.data = new SolidColor('FFFFFF').data
+    this.data = new Blink('FFFFFF').getData()
   }
 
 }
