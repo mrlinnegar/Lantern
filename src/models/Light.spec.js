@@ -16,5 +16,8 @@ describe('Light', () => {
       const light = new Light('ID');
       expect(light.address).to.equal('/ID');
     });
+
+
+
   });
 });

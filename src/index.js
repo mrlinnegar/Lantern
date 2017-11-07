@@ -1,14 +1,14 @@
-import LightRespository from './controllers/LightRespository';
+import LightingController from './controllers/LightingController';
 import LightBroker from './lib/LightBroker';
+import createApplication from './app'
 
 const http = require('http');
 const socketServer = require('./WebsocketServer');
-const application = require('./app');
-const lighting = new LightRespository(new LightBroker());
+const lightController = new LightingController(new LightBroker());
 
-const app    = application.createApplication(lighting);
+const app    = createApplication(lightController);
 const server = http.createServer(app);
-const socket = socketServer.createWSServer(server, lighting);
+const socket = socketServer.createWSServer(server, lightController);
 
 server.listen(3001, () => {
     console.log('received: %s', server.address().port);

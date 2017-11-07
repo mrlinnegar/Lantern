@@ -24,6 +24,10 @@ const createServer = (server, lighting)=> {
     lighting.addObserver(SERVER_UPDATE_LIGHT, (updatedLight) => {
       wss.broadcast(JSON.stringify({ type: SERVER_UPDATE_LIGHT, light: updatedLight }));
     });
+
+    lighting.addObserver(SERVER_ALL_LIGHTS, (allLights) => {
+        wss.broadcast(JSON.stringify({ type: SERVER_ALL_LIGHTS, data: allLights }));
+    });
   }
 
   wss.broadcast = function broadcast(data) {

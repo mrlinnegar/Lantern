@@ -10,7 +10,7 @@ chai.use(sinonChai);
 chai.should();
 
 
-describe('LightRespository', () => {
+describe('LightRepository', () => {
   let fakeBroker;
   let fakeLight;
 
@@ -45,9 +45,8 @@ describe('LightRespository', () => {
   describe('addLight', () => {
     it('should add a new light to the lights map', () => {
       const lighting = new LightRespository(fakeBroker);
-      const fakeLight = "FAKELIGHT";
       const LIGHT_ID = '12345';
-      lighting.addLight(LIGHT_ID, fakeLight);
+      lighting.registerNewLight(LIGHT_ID);
       expect(lighting.lights.size).to.equal(1);
     });
   });

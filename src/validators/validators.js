@@ -1,23 +1,23 @@
 import LightDataError from '../exceptions/LightDataError';
 const pattern = new RegExp('[0-9A-Fa-f]{6}');
 
-export function lightDataValidator(data) {
-  console.log(data);
-  let { status: s, data: d, fps: f, loop: l } = data;
+export function lightDataValidator(input) {
+  console.log(input);
+
   const response = {};
 
-  if (typeof s !== 'undefined') {
-    if (s != 0 && s != 1 && s != 2) {
+  if (typeof input.status !== 'undefined') {
+    if (input.status != 0 && input.status != 1 && input.status != 2) {
       throw new LightDataError(400, 'Status is set incorrectly');
     }
-    response.status = s;
+    response.status = input.status;
   }
 
-  if (d) {
-    if(!Array.isArray(d)){
+  if (input.data) {
+    if(!Array.isArray(input.data)){
       throw new LightDataError(400, 'Animation data is not in the correct format');
     }
-    d.map((frame)=> {
+    input.data.map((frame)=> {
       if(!Array.isArray(frame)){
         throw new LightDataError(400, 'Animation data is not in the correct format');
       }
@@ -29,22 +29,22 @@ export function lightDataValidator(data) {
     });
 
 
-    response.data = d;
+    response.data = input.data;
   }
 
-  if (l) {
-    if (l != 0 && l != 1){
+  if (typeof input.loop !== 'undefined') {
+    if (input.loop != 0 && input.loop != 1){
       throw new LightDataError(400, 'Loop must be either 1 and 0');
     }
-    response.loop = l;
+    response.loop = input.loop;
   }
 
-  if (f) {
-    f = parseInt(f);
-    if(f < 1 || f > 16){
+  if (typeof input.fps !== 'undefined') {
+    input.fps = parseInt(input.fps);
+    if(input.fps < 1 || input.fps > 16){
       throw new LightDataError(400, 'Frames per second must be between 1 an 16');
     }
-    response.fps = f;
+    response.fps = input.fps;
   }
 
   return response;

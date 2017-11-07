@@ -9,8 +9,9 @@ export default class LightData {
     this.status = status;
     this.lastSeen = new Date();
     this.memory = 0;
-    this.fps = 1;
     this.loop = 1;
+
+    this.fps = 1;
     this.data = new Blink('FFFFFF').getData()
   }
 

@@ -2,7 +2,28 @@ import express from 'express';
 import bodyparser from 'body-parser';
 import lightRoutes from './routes/Lights';
 
-const createApplication = (lighting) => {
+
+
+function logErrors (err, req, res, next) {
+    console.error(err.stack)
+    next(err)
+}
+
+function clientErrorHandler (err, req, res, next) {
+    if (req.xhr) {
+        res.status(500).send({ error: 'Something failed!' })
+    } else {
+        next(err)
+    }
+}
+
+function errorHandler (err, req, res, next) {
+    res.status(500)
+    res.send({ error: 'Something failed!' })
+}
+
+
+const createApplication = (lightController) => {
   const app = express();
   app.use(express.static('public'));
   app.use(bodyparser.json());
@@ -13,11 +34,12 @@ const createApplication = (lighting) => {
     next();
   });
 
-  app.use('/api/lights', lightRoutes(lighting));
+  app.use('/api/lights', lightRoutes(lightController));
+  app.use(logErrors)
+  app.use(clientErrorHandler)
+  app.use(errorHandler)
 
   return app;
 }
 
-module.exports = {
-  createApplication: createApplication
-}
+export default createApplication
